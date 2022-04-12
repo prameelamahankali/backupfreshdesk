@@ -177,7 +177,7 @@ const DataTable = () => {
         {
             field: 'subject', headerName: 'SUBJECT', flex: 4, 'filterable': false,
             renderCell: (params) => (
-                <div style={{wordBreak:'break-all',whiteSpace:'pre-line'}}>
+                <div style={{wordBreak:'break-all',whiteSpace:'pre-line',textAlign:'justify'}}>
                    {params.value}
                 </div>
             ),    
