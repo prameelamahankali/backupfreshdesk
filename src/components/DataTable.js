@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import Card from '@mui/material/Card';
 
 import TimelineIcon from '@mui/icons-material/Timeline';
+import TimelineRoundedIcon from '@mui/icons-material/TimelineRounded';
 
 
 // function statusSwitch(el) {
@@ -771,9 +772,9 @@ const DataTable = () => {
                 <div>
 
 
-                    <button class="custButton" onClick={routeChange}>
-                        <TimelineIcon fontSize='large'></TimelineIcon>
-                    </button>
+                    {/* <button class="custButton" onClick={routeChange}> */}
+
+                    {/* </button> */}
 
                     {/* <Redirect to="/HighCharts" /> */}
                     {/* <AnalyticsIcon onClick={window.Navigator}></AnalyticsIcon> */}
@@ -794,7 +795,10 @@ const DataTable = () => {
                 </div>
             </div>
             <div style={{ 'textAlign': 'right' }}>
-                <Button onClick={opentickets}>Open : <div>{opencount}</div></Button>
+                {/* <TimelineRoundedIcon fontSize='large'></TimelineRoundedIcon> */}
+                <Button onClick={routeChange}>Graph</Button>
+
+                <Button onClick={opentickets}>Open : <div> {opencount} </div></Button>
                 <Button onClick={closedtickets}>Closed : <div>{closedcount}</div></Button>
                 <Button onClick={alltickets}>All : <div>{tableData.length}</div></Button>
                 {/* <h1 style={{'textAlign':'right','fontSize' : 'large'}}>{tableData.length > 0 ? <div>: <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
