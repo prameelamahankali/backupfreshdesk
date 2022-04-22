@@ -144,11 +144,11 @@ const HighCharts = () => {
                     tick.push(data[i].id)
                     day.push(DayDiff(data[i]['created_at'], data[i]['stats']['closed_at']))
                     map1.set(data[i].id, data[i].diff);
-                    // console.log('difference', data[i].diff) c
+                    console.log('difference', data[i].diff) 
 
 
                 }
-                // console.log('map1', map1.keys()) c
+                console.log('map1', map1.keys()) 
                 setDays(day)
                 setTickets(tick)
                 setGraph(map1)
@@ -510,7 +510,7 @@ const HighCharts = () => {
                             <HighchartsReact highcharts={Highcharts} options={options} />
                         </div>
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={8} md={6}>
                         <div>
                             {/* <HighchartsReact highcharts={Highcharts} options={options} /> */}
                             <Card variant="outlined">

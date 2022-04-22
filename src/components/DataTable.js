@@ -378,7 +378,7 @@ const DataTable = () => {
                     //     default:
                     //         break;
                     //     }
-
+                    data[i]['diff'] = DayDiff(data[i]['created_at'], data[i]['stats']['closed_at'])
                     if (data[i].status == 2) {
                         // console.log('status', data[i].status); c
                         // console.log('open length', open.length) c
@@ -389,7 +389,7 @@ const DataTable = () => {
 
 
 
-                    data[i]['diff'] = DayDiff(data[i]['created_at'], data[i]['stats']['closed_at'])
+                   
 
 
                     if (data[i]['status'] === 2) {
