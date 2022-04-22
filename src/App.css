@@ -29,7 +29,7 @@
 }
 
 
-.custButton {
+/* .custButton {
   align-items: center;
   background-color: #fefffd;
   box-shadow: 
@@ -41,7 +41,7 @@
   justify-content: center;
   margin-right: 4rem;
   width: 2.8rem;
-}
+} */
 
 @keyframes App-logo-spin {
   from {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import pic from "../DNOWLogo.png";
-import { Button, Modal, Box, StepIcon, IconButton } from '@mui/material';
+import { Button, Modal, Box, StepIcon, IconButton, Tab, Tabs } from '@mui/material';
 import td from '@mui/x-data-grid';
 import HighCharts from './HighCharts';
 // import AnalyticsIcon from '@mui/icons-material/Analytics';
@@ -14,6 +14,11 @@ import Card from '@mui/material/Card';
 
 import TimelineIcon from '@mui/icons-material/Timeline';
 import TimelineRoundedIcon from '@mui/icons-material/TimelineRounded';
+// import Tabs from '@mui/material/Tab';
+// import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 
 // function statusSwitch(el) {
@@ -122,6 +127,7 @@ const DataTable = () => {
 
     const [rows, setRows] = useState(tableData);
     const [deletedRows, setDeletedRows] = useState([]);
+    const [value, setValue] = React.useState('one');
 
 
     // function statusSwitch(el) {
@@ -237,12 +243,12 @@ const DataTable = () => {
         },
 
         {
-            field: 'updated_at', headerName: 'LAST UPDATED', flex: 1,
+            field: "stats.closed_at", headerName: 'CLOSED AT', flex: 1,
             'filterable': false,
             renderCell: (params) => (
                 <div>
-                    {(new Date(params.value).toLocaleDateString('en-US', { timeZone: 'UTC' }))}
-                    {/* {(params.value.split('T')[0])} */}
+                    {(new Date(params.row.stats.closed_at).toLocaleDateString('en-US', { timeZone: 'UTC' }))}
+                    {/* {params.row.stats.closed_at} */}
                 </div>
             ),
         },
@@ -274,74 +280,74 @@ const DataTable = () => {
         // {opentickets}
 
 
-        fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-                'soNkJKPVmx1hxcr5Q9QT': 'X'
-            })
-        })
-            .then((response) => {
-                // console.log('response ', response.json());
-                return response.json();
-            })
-            .then((open) => {
-                // console.log('data1', open); c
-                // console.log('total tickets', open.total); c
-                // setData(open.results);
+        // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
+        //     method: 'GET',
+        //     headers: new Headers({
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+        //         'soNkJKPVmx1hxcr5Q9QT': 'X'
+        //     })
+        // })
+        //     .then((response) => {
+        //         // console.log('response ', response.json());
+        //         return response.json();
+        //     })
+        //     .then((open) => {
+        //         // console.log('data1', open); c
+        //         // console.log('total tickets', open.total); c
+        //         // setData(open.results);
 
-                for (let i = 0; i < open.total; i++) {
-                    // console.log('---------------', open.results[i]); c
-
-
-                    open.results[i]['diff'] = DayDiff(open.results[i]['created_at'], open.results[i]['updated_at'])
-
-                    if (open.results[i]['status'] === 2) {
-                        open.results[i]['status'] = 'Open';
-                    }
-                    if (open.results[i]['status'] === 3) {
-                        open.results[i]['status'] = 'Pending';
-                    }
-                    if (open.results[i]['status'] === 4) {
-                        open.results[i]['status'] = 'Resolved';
-                    }
-                    if (open.results[i]['status'] === 5) {
-                        open.results[i]['status'] = 'Closed';
-                    }
-                    if (open.results[i]['status'] === 6) {
-                        open.results[i]['status'] = 'Waiting on Customer';
-                    }
-                    if (open.results[i]['status'] === 7) {
-                        open.results[i]['status'] = 'Waiting on Third Party';
-                    }
-                }
-                for (let i = 0; i < open.total; i++) {
-                    // console.log('data0', open.results[i]); c
-                    if (open.results[i]['priority'] === 1) {
-                        open.results[i]['priority'] = 'Low';
-                    }
-                    if (open.results[i]['priority'] === 2) {
-                        open.results[i]['priority'] = 'Medium';
-                    }
-                    if (open.results[i]['priority'] === 3) {
-                        open.results[i]['priority'] = 'High';
-                    }
-                    if (open.results[i]['priority'] === 4) {
-                        open.results[i]['priority'] = 'Urgrnt';
-                    }
-                }
-                setData(open.results);
-                setOpenCount(open.results.length);
+        //         for (let i = 0; i < open.total; i++) {
+        //             // console.log('---------------', open.results[i]); c
 
 
-            })
-            .catch((err) => {
-                console.log('err in api call Main ', err);
-            })
+        //             open.results[i]['diff'] = DayDiff(open.results[i]['created_at'], open.results[i]['updated_at'])
+
+        //             if (open.results[i]['status'] === 2) {
+        //                 open.results[i]['status'] = 'Open';
+        //             }
+        //             if (open.results[i]['status'] === 3) {
+        //                 open.results[i]['status'] = 'Pending';
+        //             }
+        //             if (open.results[i]['status'] === 4) {
+        //                 open.results[i]['status'] = 'Resolved';
+        //             }
+        //             if (open.results[i]['status'] === 5) {
+        //                 open.results[i]['status'] = 'Closed';
+        //             }
+        //             if (open.results[i]['status'] === 6) {
+        //                 open.results[i]['status'] = 'Waiting on Customer';
+        //             }
+        //             if (open.results[i]['status'] === 7) {
+        //                 open.results[i]['status'] = 'Waiting on Third Party';
+        //             }
+        //         }
+        //         for (let i = 0; i < open.total; i++) {
+        //             // console.log('data0', open.results[i]); c
+        //             if (open.results[i]['priority'] === 1) {
+        //                 open.results[i]['priority'] = 'Low';
+        //             }
+        //             if (open.results[i]['priority'] === 2) {
+        //                 open.results[i]['priority'] = 'Medium';
+        //             }
+        //             if (open.results[i]['priority'] === 3) {
+        //                 open.results[i]['priority'] = 'High';
+        //             }
+        //             if (open.results[i]['priority'] === 4) {
+        //                 open.results[i]['priority'] = 'Urgrnt';
+        //             }
+        //         }
+        //         setData(open.results);
+        //         setOpenCount(open.results.length);
 
 
-        fetch('https://tmsone.freshdesk.com/api/v2/tickets', {
+        //     })
+        //     .catch((err) => {
+        //         console.log('err in api call Main ', err);
+        //     })
+
+
+        fetch('https://tmsone.freshdesk.com/api/v2/tickets?include=stats', {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -351,6 +357,8 @@ const DataTable = () => {
         })
             .then((data) => data.json())
             .then((data) => {
+
+                var open = []
                 for (let i = 0; i < data.length; i++) {
                     // console.log('data0', data[i]); c
                     // switch (data[i]['status']) {
@@ -371,7 +379,17 @@ const DataTable = () => {
                     //         break;
                     //     }
 
-                    data[i]['diff'] = DayDiff(data[i]['created_at'], data[i]['updated_at'])
+                    if (data[i].status == 2) {
+                        // console.log('status', data[i].status); c
+                        // console.log('open length', open.length) c
+
+                        open.push(data[i])
+
+                    }
+
+
+
+                    data[i]['diff'] = DayDiff(data[i]['created_at'], data[i]['stats']['closed_at'])
 
 
                     if (data[i]['status'] === 2) {
@@ -393,6 +411,8 @@ const DataTable = () => {
                         data[i]['status'] = 'Waiting on Third Party';
                     }
                 }
+                setData(open)
+                setOpenCount(open.length);
                 for (let i = 0; i < data.length; i++) {
                     // console.log('data0', data[i]); c
                     if (data[i]['priority'] === 1) {
@@ -580,105 +600,105 @@ const DataTable = () => {
 
     // console.log('conversations ', conversations); c
 
-    function opentickets() {
-        // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
-        //     // fetch('https://tmsone.freshdesk.com/api/v2/tickets', {
+    // function opentickets() {
+    // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
+    //     // fetch('https://tmsone.freshdesk.com/api/v2/tickets', {
 
-        //         method: 'GET',
-        //         headers: new Headers({
-        //             'Content-Type': 'application/json',
-        //             'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-        //             'soNkJKPVmx1hxcr5Q9QT': 'X'
-        //         })
-        //     })
-        //         .then((response) => {
-        //             // console.log('response ', response.json());
-        //             return response.json();
-        //         })
-        //         .then((data) => {
-        //             console.log('data1', data);
-        //             console.log('total tickets',data.length);
-        //             // setData(data.results);
-
-
-        //             for (let i=0; i<data.results.length; i++){
-        //                 console.log('data.results0', data.results[i]);
+    //         method: 'GET',
+    //         headers: new Headers({
+    //             'Content-Type': 'application/json',
+    //             'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+    //             'soNkJKPVmx1hxcr5Q9QT': 'X'
+    //         })
+    //     })
+    //         .then((response) => {
+    //             // console.log('response ', response.json());
+    //             return response.json();
+    //         })
+    //         .then((data) => {
+    //             console.log('data1', data);
+    //             console.log('total tickets',data.length);
+    //             // setData(data.results);
 
 
-        //                 if (data.results[i]['status'] === 2){
-        //                     data.results[i]['status'] = 'Open';
-        //                 }
-        //                 if (data.results[i]['status'] === 3){
-        //                     data.results[i]['status'] = 'Pending';
-        //                 }
-        //                 if (data.results[i]['status'] === 4){
-        //                     data.results[i]['status'] = 'Resolved';
-        //                 }
-        //                 if (data.results[i]['status'] === 5){
-        //                     data.results[i]['status'] = 'Closed';
-        //                 }
-        //                 if (data.results[i]['status'] === 6){
-        //                     data.results[i]['status'] = 'Waiting on Customer';
-        //                 }
-        //                 if (data.results[i]['status'] === 7){
-        //                     data.results[i]['status'] = 'Waiting on Third Party';
-        //                 }
-        //             }
-        //             for (let i=0; i<data.results.length; i++){
-        //                 console.log('data.results0', data.results[i]);
-        //                 if (data.results[i]['priority'] === 1){
-        //                     data.results[i]['priority'] = 'Low';
-        //                 }
-        //                 if (data.results[i]['priority'] === 2){
-        //                     data.results[i]['priority'] = 'Medium';
-        //                 }
-        //                 if (data.results[i]['priority'] === 3){
-        //                     data.results[i]['priority'] = 'High';
-        //                 }
-        //                 if (data.results[i]['priority'] === 4){
-        //                     data.results[i]['priority'] = 'Urgrnt';
-        //                 }                   
-        //             }
-
-        //             setTableData(data.results)
-
-        //             // console.log('data 1 id',data.results.id);
-
-        //             // for(let i=0; i<data.total; i++) {
-        //             //     console.log('fro    ',data.results[i].id);
-        //             //     getConversations(data.results[i].id);
-        //             // }
-        //             // for(let i=0; i<data.results.length; i++) {
-        //             //     console.log('fro    ',data.results[i].id);
-        //             //     getConversations(data.results[i].id);
-        //             // }
+    //             for (let i=0; i<data.results.length; i++){
+    //                 console.log('data.results0', data.results[i]);
 
 
-        //         })
-        //         .catch((err) => {
-        //             console.log('err in api call Main ', err);
-        //         })
-        // .catch((err) => {
-        // console.log('err in api call Main ', err);
-        // })
+    //                 if (data.results[i]['status'] === 2){
+    //                     data.results[i]['status'] = 'Open';
+    //                 }
+    //                 if (data.results[i]['status'] === 3){
+    //                     data.results[i]['status'] = 'Pending';
+    //                 }
+    //                 if (data.results[i]['status'] === 4){
+    //                     data.results[i]['status'] = 'Resolved';
+    //                 }
+    //                 if (data.results[i]['status'] === 5){
+    //                     data.results[i]['status'] = 'Closed';
+    //                 }
+    //                 if (data.results[i]['status'] === 6){
+    //                     data.results[i]['status'] = 'Waiting on Customer';
+    //                 }
+    //                 if (data.results[i]['status'] === 7){
+    //                     data.results[i]['status'] = 'Waiting on Third Party';
+    //                 }
+    //             }
+    //             for (let i=0; i<data.results.length; i++){
+    //                 console.log('data.results0', data.results[i]);
+    //                 if (data.results[i]['priority'] === 1){
+    //                     data.results[i]['priority'] = 'Low';
+    //                 }
+    //                 if (data.results[i]['priority'] === 2){
+    //                     data.results[i]['priority'] = 'Medium';
+    //                 }
+    //                 if (data.results[i]['priority'] === 3){
+    //                     data.results[i]['priority'] = 'High';
+    //                 }
+    //                 if (data.results[i]['priority'] === 4){
+    //                     data.results[i]['priority'] = 'Urgrnt';
+    //                 }                   
+    //             }
 
-        // console.log('openTickets'); c
-        var opentickets = []
+    //             setTableData(data.results)
 
-        for (let i = 0; i < tableData.length; i++) {
-            // console.log('tab     ', tableData[i]); c
-            if (tableData[i].status == 'Open') {
-                // console.log('open', tableData[i].status); c
-                opentickets.push(tableData[i])
-            }
-            // console.log('opentickets', opentickets) c
-        }
-        // setTableData(optick)
-        setData(opentickets)
-        setOpenCount(opentickets.length);
-        // console.log('opentickets length', opentickets.length) c
+    //             // console.log('data 1 id',data.results.id);
 
-    }
+    //             // for(let i=0; i<data.total; i++) {
+    //             //     console.log('fro    ',data.results[i].id);
+    //             //     getConversations(data.results[i].id);
+    //             // }
+    //             // for(let i=0; i<data.results.length; i++) {
+    //             //     console.log('fro    ',data.results[i].id);
+    //             //     getConversations(data.results[i].id);
+    //             // }
+
+
+    //         })
+    //         .catch((err) => {
+    //             console.log('err in api call Main ', err);
+    //         })
+    // .catch((err) => {
+    // console.log('err in api call Main ', err);
+    // })
+
+    // console.log('openTickets'); c
+    // var opentickets = []
+
+    // for (let i = 0; i < tableData.length; i++) {
+    //     // console.log('tab     ', tableData[i]); c
+    //     if (tableData[i].status == 'Open') {
+    //         // console.log('open', tableData[i].status); c
+    //         opentickets.push(tableData[i])
+    //     }
+    //     // console.log('opentickets', opentickets) c
+    // }
+    // // setTableData(optick)
+    // setData(opentickets)
+    // setOpenCount(opentickets.length);
+    // // console.log('opentickets length', opentickets.length) c
+
+    // }
     function alltickets() {
         //         console.log('allTickets');
         //         var alltickets = []
@@ -710,8 +730,8 @@ const DataTable = () => {
     // //   var d = Math.floor((Math.abs(updated_at-created_at))/(1000*60*60*24));
     //   setDays(days)
 
-    function DayDiff(created_at, updated_at) {
-        var diff = Date.parse(updated_at) - Date.parse(created_at);
+    function DayDiff(created_at, closed_at) {
+        var diff = Date.parse(closed_at) - Date.parse(created_at);
         var d = isNaN(diff) ? NaN :
             // diff : diff,
             // ms : Math.floor( diff            % 1000 ),
@@ -761,6 +781,17 @@ const DataTable = () => {
         let path = `high`;
         navigate(path);
     }
+   
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+      };
+
+
+    
+
+
+
+      
 
     return (
         // <div style={{ borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)',height: 700, width: '97%',padding:'10px'}}>
@@ -781,7 +812,7 @@ const DataTable = () => {
                     {/* <IconButton aria-label="fingerprint" color="secondary">
                         <StepIcon />
                     </IconButton> */}
-                    <Modal
+                    {/* <Modal
                         open={open}
                         onClose={handleClose}
                         aria-labelledby="modal-modal-title"
@@ -790,17 +821,39 @@ const DataTable = () => {
                         <Box sx={style}>
                             <HighCharts />
                         </Box>
-                    </Modal>
+                    </Modal> */}
 
                 </div>
             </div>
             <div style={{ 'textAlign': 'right' }}>
                 {/* <TimelineRoundedIcon fontSize='large'></TimelineRoundedIcon> */}
-                <Button onClick={routeChange}>Graph</Button>
+                <Button className='one' onClick={routeChange}>Graph</Button>
 
-                <Button onClick={opentickets}>Open : <div> {opencount} </div></Button>
-                <Button onClick={closedtickets}>Closed : <div>{closedcount}</div></Button>
-                <Button onClick={alltickets}>All : <div>{tableData.length}</div></Button>
+                <Button  className='two' onClick={open}>Open:  <div> {opencount} </div> </Button>
+                <Button  className= 'three' onClick={closedtickets}>Closed:  <div> {closedcount}  </div></Button>
+                <Button  className='two' onClick={alltickets}>All:  <div> {tableData.length} </div></Button> 
+                {/* <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="wrapped label tabs example"
+                >
+                    <Tab
+                        value='one'
+                        onClick={routeChange}
+                        label='Graph'
+                        component={open}
+                        wrapped
+                    /> 
+                    <Tab
+                        value='two'
+                        onClick={open}
+                        label='Open' 
+                        
+                        wrapped
+                    /> 
+                    <Tab value='three' label="Closed" onClick={closedtickets}  />
+                    <Tab value='four' label="All" onClick={alltickets}  />
+                </Tabs>  */}
                 {/* <h1 style={{'textAlign':'right','fontSize' : 'large'}}>{tableData.length > 0 ? <div>: <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
                 {/* <h1><div>All Tickets<button><a href={tableData}></a></button></div></h1> */}
             </div>
