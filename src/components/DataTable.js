@@ -1,3 +1,4 @@
+ 
 import React, { useState, useEffect } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import pic from "../DNOWLogo.png";
@@ -280,71 +281,71 @@ const DataTable = () => {
         // {opentickets}
 
 
-        // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
-        //     method: 'GET',
-        //     headers: new Headers({
-        //         'Content-Type': 'application/json',
-        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-        //         'soNkJKPVmx1hxcr5Q9QT': 'X'
-        //     })
-        // })
-        //     .then((response) => {
-        //         // console.log('response ', response.json());
-        //         return response.json();
-        //     })
-        //     .then((open) => {
-        //         // console.log('data1', open); c
-        //         // console.log('total tickets', open.total); c
-        //         // setData(open.results);
+        fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                'soNkJKPVmx1hxcr5Q9QT': 'X'
+            })
+        })
+            .then((response) => {
+                // console.log('response ', response.json());
+                return response.json();
+            })
+            .then((open) => {
+                // console.log('data1', open); c
+                // console.log('total tickets', open.total); c
+                // setData(open.results);
 
-        //         for (let i = 0; i < open.total; i++) {
-        //             // console.log('---------------', open.results[i]); c
-
-
-        //             open.results[i]['diff'] = DayDiff(open.results[i]['created_at'], open.results[i]['updated_at'])
-
-        //             if (open.results[i]['status'] === 2) {
-        //                 open.results[i]['status'] = 'Open';
-        //             }
-        //             if (open.results[i]['status'] === 3) {
-        //                 open.results[i]['status'] = 'Pending';
-        //             }
-        //             if (open.results[i]['status'] === 4) {
-        //                 open.results[i]['status'] = 'Resolved';
-        //             }
-        //             if (open.results[i]['status'] === 5) {
-        //                 open.results[i]['status'] = 'Closed';
-        //             }
-        //             if (open.results[i]['status'] === 6) {
-        //                 open.results[i]['status'] = 'Waiting on Customer';
-        //             }
-        //             if (open.results[i]['status'] === 7) {
-        //                 open.results[i]['status'] = 'Waiting on Third Party';
-        //             }
-        //         }
-        //         for (let i = 0; i < open.total; i++) {
-        //             // console.log('data0', open.results[i]); c
-        //             if (open.results[i]['priority'] === 1) {
-        //                 open.results[i]['priority'] = 'Low';
-        //             }
-        //             if (open.results[i]['priority'] === 2) {
-        //                 open.results[i]['priority'] = 'Medium';
-        //             }
-        //             if (open.results[i]['priority'] === 3) {
-        //                 open.results[i]['priority'] = 'High';
-        //             }
-        //             if (open.results[i]['priority'] === 4) {
-        //                 open.results[i]['priority'] = 'Urgrnt';
-        //             }
-        //         }
-        //         setData(open.results);
-        //         setOpenCount(open.results.length);
+                for (let i = 0; i < open.total; i++) {
+                    // console.log('---------------', open.results[i]); c
 
 
-        //     })
-        //     .catch((err) => {
-        //         console.log('err in api call Main ', err);
-        //     })
+                    open.results[i]['diff'] = DayDiff(open.results[i]['created_at'], open.results[i]['updated_at'])
+
+                    if (open.results[i]['status'] === 2) {
+                        open.results[i]['status'] = 'Open';
+                    }
+                    if (open.results[i]['status'] === 3) {
+                        open.results[i]['status'] = 'Pending';
+                    }
+                    if (open.results[i]['status'] === 4) {
+                        open.results[i]['status'] = 'Resolved';
+                    }
+                    if (open.results[i]['status'] === 5) {
+                        open.results[i]['status'] = 'Closed';
+                    }
+                    if (open.results[i]['status'] === 6) {
+                        open.results[i]['status'] = 'Waiting on Customer';
+                    }
+                    if (open.results[i]['status'] === 7) {
+                        open.results[i]['status'] = 'Waiting on Third Party';
+                    }
+                }
+                for (let i = 0; i < open.total; i++) {
+                    // console.log('data0', open.results[i]); c
+                    if (open.results[i]['priority'] === 1) {
+                        open.results[i]['priority'] = 'Low';
+                    }
+                    if (open.results[i]['priority'] === 2) {
+                        open.results[i]['priority'] = 'Medium';
+                    }
+                    if (open.results[i]['priority'] === 3) {
+                        open.results[i]['priority'] = 'High';
+                    }
+                    if (open.results[i]['priority'] === 4) {
+                        open.results[i]['priority'] = 'Urgrnt';
+                    }
+                }
+                setData(open.results);
+                setOpenCount(open.results.length);
+
+
+            })
+            .catch((err) => {
+                console.log('err in api call Main ', err);
+            })
 
 
         fetch('https://tmsone.freshdesk.com/api/v2/tickets?include=stats', {
@@ -358,7 +359,7 @@ const DataTable = () => {
             .then((data) => data.json())
             .then((data) => {
 
-                var open = []
+                // var open = []
                 for (let i = 0; i < data.length; i++) {
                     // console.log('data0', data[i]); c
                     // switch (data[i]['status']) {
@@ -378,18 +379,18 @@ const DataTable = () => {
                     //     default:
                     //         break;
                     //     }
+
+                    // if (data[i].status == 2) {
+                    //     // console.log('status', data[i].status); c
+                    //     // console.log('open length', open.length) c
+
+                    //     open.push(data[i])
+
+                    // }
+
+
+
                     data[i]['diff'] = DayDiff(data[i]['created_at'], data[i]['stats']['closed_at'])
-                    if (data[i].status == 2) {
-                        // console.log('status', data[i].status); c
-                        // console.log('open length', open.length) c
-
-                        open.push(data[i])
-
-                    }
-
-
-
-                   
 
 
                     if (data[i]['status'] === 2) {
@@ -411,8 +412,8 @@ const DataTable = () => {
                         data[i]['status'] = 'Waiting on Third Party';
                     }
                 }
-                setData(open)
-                setOpenCount(open.length);
+                // setData(open)
+                // setOpenCount(open.length);
                 for (let i = 0; i < data.length; i++) {
                     // console.log('data0', data[i]); c
                     if (data[i]['priority'] === 1) {
@@ -600,7 +601,7 @@ const DataTable = () => {
 
     // console.log('conversations ', conversations); c
 
-    // function opentickets() {
+    function opentickets() {
     // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
     //     // fetch('https://tmsone.freshdesk.com/api/v2/tickets', {
 
@@ -618,7 +619,7 @@ const DataTable = () => {
     //         .then((data) => {
     //             console.log('data1', data);
     //             console.log('total tickets',data.length);
-    //             // setData(data.results);
+                // setData(data.results);
 
 
     //             for (let i=0; i<data.results.length; i++){
@@ -683,22 +684,22 @@ const DataTable = () => {
     // })
 
     // console.log('openTickets'); c
-    // var opentickets = []
+    var opentickets = []
 
-    // for (let i = 0; i < tableData.length; i++) {
-    //     // console.log('tab     ', tableData[i]); c
-    //     if (tableData[i].status == 'Open') {
-    //         // console.log('open', tableData[i].status); c
-    //         opentickets.push(tableData[i])
-    //     }
-    //     // console.log('opentickets', opentickets) c
-    // }
-    // // setTableData(optick)
-    // setData(opentickets)
-    // setOpenCount(opentickets.length);
-    // // console.log('opentickets length', opentickets.length) c
+    for (let i = 0; i < tableData.length; i++) {
+        // console.log('tab     ', tableData[i]); c
+        if (tableData[i].status == 'Open') {
+            // console.log('open', tableData[i].status); c
+            opentickets.push(tableData[i])
+        }
+        // console.log('opentickets', opentickets) c
+    }
+    // setTableData(optick)
+    setData(opentickets)
+    setOpenCount(opentickets.length);
+    // console.log('opentickets length', opentickets.length) c
 
-    // }
+    }
     function alltickets() {
         //         console.log('allTickets');
         //         var alltickets = []
@@ -829,7 +830,7 @@ const DataTable = () => {
                 {/* <TimelineRoundedIcon fontSize='large'></TimelineRoundedIcon> */}
                 <Button className='one' onClick={routeChange}>Graph</Button>
 
-                <Button  className='two' onClick={open}>Open:  <div> {opencount} </div> </Button>
+                <Button  className='two' onClick={opentickets}>Open:  <div> {opencount} </div> </Button>
                 <Button  className= 'three' onClick={closedtickets}>Closed:  <div> {closedcount}  </div></Button>
                 <Button  className='two' onClick={alltickets}>All:  <div> {tableData.length} </div></Button> 
                 {/* <Tabs
