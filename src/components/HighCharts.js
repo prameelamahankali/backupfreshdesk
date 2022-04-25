@@ -24,7 +24,7 @@ const HighCharts = () => {
     const [opticklastweek, setOpTickLastWeek] = useState(0)
     const [restime, setResTime] = useState(0)
     const [resoltime, setresoltime] = useState(0)
-    const [high, sethigh] = useState([])
+    const [high, sethigh] = useState(0)
 
 
     // const options = {
@@ -144,11 +144,11 @@ const HighCharts = () => {
                     tick.push(data[i].id)
                     day.push(DayDiff(data[i]['created_at'], data[i]['stats']['closed_at']))
                     map1.set(data[i].id, data[i].diff);
-                    console.log('difference', data[i].diff) 
+                    // console.log('difference', data[i].diff) c
 
 
                 }
-                console.log('map1', map1.keys()) 
+                // console.log('map1', map1.keys())  c
                 setDays(day)
                 setTickets(tick)
                 setGraph(map1)
@@ -273,7 +273,7 @@ const HighCharts = () => {
                         // console.log('eight week ago')
                         // console.log('datesss ', created, eightweekAgoDate, today);
                         if (created < today && created > eightweekAgoDate) {
-                            console.log('----high created', created);
+                            // console.log('----high created', created); c
                             highprioritylastweek.push(data[i])
                         }
 
@@ -352,7 +352,7 @@ const HighCharts = () => {
 
                 setTableData(data)
 
-                console.log('HighCharts', data)
+                // console.log('HighCharts', data) c
 
                 // console.log('daysdiff', tickets, days) c
             })
