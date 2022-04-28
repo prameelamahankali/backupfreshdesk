@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { render } from 'react-dom'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official';
-import pic from "../left.png";
+import pic from "../leftarrow.png";
 
 import { Box, Button, Grid, Item, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
