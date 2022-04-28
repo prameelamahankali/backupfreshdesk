@@ -928,7 +928,7 @@ return (
                 <Tab
                     value='two'
                     onClick={routeChange}
-                    label = {<img src={img} alt="Graph" width="40" height="30" />}
+                    label = {<img src={img} alt="Graph" width="35" height="30" />}
                     // label = "📈"
 
 
