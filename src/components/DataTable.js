@@ -876,6 +876,8 @@ const DataTable = () => {
 
 
 
+
+
 return (
     // <div style={{ borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)',height: 700, width: '97%',padding:'10px'}}>
     <div style={{ height: 700, padding: '10px' }} >

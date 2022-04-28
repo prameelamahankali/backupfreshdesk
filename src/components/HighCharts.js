@@ -625,11 +625,6 @@ const HighCharts = () => {
                             // console.log(created,firstweekAgoDate,today,data.results[i].id);
 
                         }
-                        
-
-
-
-
 
                     }
 
