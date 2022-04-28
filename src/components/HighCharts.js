@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { fontSize } from '@mui/system';
 
 
+
 const HighCharts = () => {
     const [tableData, setTableData] = useState([])
     const [graph, setGraph] = useState(new Map())
@@ -26,7 +27,7 @@ const HighCharts = () => {
     const [opticklastweek, setOpTickLastWeek] = useState(0)
     const [restime, setResTime] = useState(0)
     const [resoltime, setresoltime] = useState(0)
-    const [high, sethigh] = useState(0)
+    const [high, sethigh] = useState([])
 
 
     // const options = {
@@ -87,7 +88,7 @@ const HighCharts = () => {
             text: 'High Priority Tickets (Per Week)'
         },
         xAxis: {
-            categories: [1,2,3,4,5,6,7,8],
+            categories: [1, 2, 3, 4, 5, 6, 7, 8],
             // categories:high.length
             // name: 'Tickets',
             // type: "category",
@@ -221,7 +222,8 @@ const HighCharts = () => {
 
                         const milliseconds = Math.abs(dateTwoObj - dateOneObj);
                         const hours = Math.round(milliseconds / 36e5);
-                        responsetime.push(hours)
+                        const time =  ((hours / 2));
+                        responsetime.push(time)
 
                         // console.log('hourssss ', milliseconds, hours); c
 
@@ -244,9 +246,11 @@ const HighCharts = () => {
                         // console.log('done', dOne, dTwo, dOneObj, dTwoObj) c
                         const milliseconds = Math.abs(dTwoObj - dOneObj);
                         const hours = Math.round(milliseconds / 36e5);
+                        const time =  Math.round((hours / 24)*8)
+                         
                         const minu = Math.round(milliseconds / 60000);
 
-                        resolutiontime.push(hours)
+                        resolutiontime.push(time)
 
                         // console.log('resolhourssss ', hours, minu); c
 
@@ -360,23 +364,23 @@ const HighCharts = () => {
                 // console.log('daysdiff', tickets, days) c
             })
 
-        fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%272021-02-25%27%20AND%20created_at:<%272022-04-21%27"', {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-                'soNkJKPVmx1hxcr5Q9QT': 'X',
-                'Access-Control-Expose-Headers': '*'
-            })
-        })
-            .then((response) => {
-                // console.log('priority', response.headers )
+        // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%272021-02-25%27%20AND%20created_at:<%272022-04-21%27"', {
+        //     method: 'GET',
+        //     headers: new Headers({
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+        //         'soNkJKPVmx1hxcr5Q9QT': 'X',
+        //         'Access-Control-Expose-Headers': '*'
+        //     })
+        // })
+        //     .then((response) => {
+        //         // console.log('priority', response.headers )
 
-                return response.json()
-            })
-            .then((priority) => {
-                // console.log('priooo',priority)
-            })
+        //         return response.json()
+        //     })
+        //     .then((priority) => {
+        //         // console.log('priooo',priority)
+        //     })
 
 
 
@@ -389,12 +393,13 @@ const HighCharts = () => {
         var diff = Date.parse(resolved_at) - Date.parse(created_at);
         var d = isNaN(diff) ? NaN :
             // diff : diff,
-            // ms : Math.floor( diff            % 1000 ),
+            // ms : Math.floor( diff % 1000 ),
             // s  : Math.floor( diff /     1000 %   60 ),
             // m  : Math.floor( diff /    60000 %   60 ),
             // h  : Math.floor( diff /  3600000 %   24 ),
-            Math.floor(diff / 86400000)
-        // console.log('diff', d)
+             Math.floor(diff / 86400000)
+           
+        console.log('diff', d)
         return d
     }
 
@@ -509,7 +514,7 @@ const HighCharts = () => {
     }
 
     useEffect(() => {
-        fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="priority:1%20AND%20created_at:>%272022-01-01%27"', {
+        fetch(`https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%20'2022-01-02'%20AND%20(priority:3%20OR%20priority:4)"`, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -523,12 +528,12 @@ const HighCharts = () => {
         })
             .then((res) => {
                 return res.json();
-                
+
 
 
             })
             .then((data) => {
-                // console.log('updated', data, data.results.length, data.total) 
+                console.log('updated', data, data.results.length, data.total)
 
                 var eightweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 56));
                 var sevenweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 49));
@@ -542,7 +547,7 @@ const HighCharts = () => {
                 var today = new Date();
                 var perweek = []
 
-                var high = []
+                var highArr = []
                 var eightweek = []
                 var seventhweek = []
                 var sixthweek = []
@@ -564,11 +569,11 @@ const HighCharts = () => {
 
                     if (data.results[i].priority == 3 || data.results[i].priority == 4) {
                         // console.log('status', data.results[i].priority);
-                        high.push(data.results[i])
+                        highArr.push(data.results[i])
                         if (created >= eightweekAgoDate && created <= sevenweekAgoDate) {
                             // console.log('----high created', data.results[i]);
                             eightweek.push(data.results[i])
-                            
+
                             // perweek.push(eightweek.length)
 
                             // console.log('888'); c
@@ -578,49 +583,49 @@ const HighCharts = () => {
 
                         else if (created >= sevenweekAgoDate && created <= sixthweekAgoDate) {
                             seventhweek.push(data.results[i])
-                            
+
                             // console.log('777'); c
                             // console.log(created,sevenweekAgoDate,sixthweekAgoDate,data.results[i].id); c
 
                         }
                         else if (created >= sixthweekAgoDate && created <= fifthweekAgoDate) {
                             sixthweek.push(data.results[i])
-                            
+
                             // console.log('666');
                             // console.log(created,sixthweekAgoDate,fifthweekAgoDate,data.results[i].id);
 
                         }
                         else if (created >= fifthweekAgoDate && created <= fourthweekAgoDate) {
                             fifthweek.push(data.results[i])
-                            
+
                             // console.log('555');
                             // console.log(created,fifthweekAgoDate,fourthweekAgoDate,data.results[i].id);
 
                         }
                         else if (created >= fourthweekAgoDate && created <= thirdweekAgoDate) {
                             fourthweek.push(data.results[i])
-                            
+
                             // console.log('444');
                             // console.log(created,fourthweekAgoDate,thirdweekAgoDate,data.results[i].id);
 
                         }
                         else if (created >= thirdweekAgoDate && created <= secondweekAgoDate) {
                             thirdweek.push(data.results[i])
-                            
+
                             // console.log('333');
                             // console.log(created,thirdweekAgoDate,secondweekAgoDate,data.results[i].id);
 
                         }
                         else if (created >= secondweekAgoDate && created <= firstweekAgoDate) {
                             secondweek.push(data.results[i])
-                            
+
                             // console.log('222');
                             // console.log(created,secondweekAgoDate,firstweekAgoDate,data.results[i].id);
 
                         }
-                        else if(created >= firstweekAgoDate && created <= today) {
+                        else if (created >= firstweekAgoDate && created <= today) {
                             firstweek.push(data.results[i])
-                            
+
                             // console.log('111');
                             // console.log(created,firstweekAgoDate,today,data.results[i].id);
 
@@ -636,17 +641,17 @@ const HighCharts = () => {
                 perweek.push(fifthweek.length)
                 perweek.push(sixthweek.length)
                 perweek.push(seventhweek.length)
-                
+
                 perweek.push(eightweek.length)
-                
-                
-                
-                
-               
+
+
+
+
+
                 sethigh(perweek)
 
 
-                
+
                 // // console.log('Dates', created, eightweekAgoDate, sevenweekAgoDate, sixthweekAgoDate, fifthweekAgoDate, fourthweekAgoDate, thirdweekAgoDate, secondweekAgoDate, firstweekAgoDate, today);
                 // console.log('high array', high);
                 // // // console.log('highprio array', highprio);
@@ -654,92 +659,92 @@ const HighCharts = () => {
                 // console.log(firstweek.length,secondweek.length,thirdweek.length,fourthweek.length, fifthweek.length,sixthweek.length, seventhweek.length, eightweek.length);
 
             })
-            
-            
-            
-
-
-            
 
 
 
-}, [])
 
 
-return (
-    <><Button style={{ display: 'flex',fontSize:'xx-large'}} onClick={routeChange}>{<img src={pic} alt="BACK" width="45" height="45" />}</Button>
-        <div style={{ margin: '2rem' }}>
 
-            <Grid container spacing={2}>
-                <Grid xs={12} md={12}>
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <HighchartsReact highcharts={Highcharts} options={options} />
-                    </div>
-                </Grid>
-                <Grid item xs={8} md={6}>
-                    <div>
-                        {/* <HighchartsReact highcharts={Highcharts} options={options} /> */}
-                        <Card variant="outlined">
-                            <CardContent>
-                                <Typography variant="h5" component="div">
-                                    {todayop}
 
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    Open Tickets (Today)
-                                </Typography>
-                            </CardContent>
 
-                        </Card>
-                    </div>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <div>
-                        <Card variant="outlined">
-                            <CardContent>
-                                <Typography variant="h5" component="div">
-                                    {opticklastweek}
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    Open Tickets (Last Week)
-                                </Typography>
 
-                            </CardContent>
+    }, [tableData])
 
-                        </Card>
-                    </div>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <div>
-                        <Card variant="outlined">
-                            <CardContent>
-                                <Typography variant="h5" component="div">
-                                    {restime.toFixed(2)} <AccessTimeIcon></AccessTimeIcon>
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    Average Response Time (Hour)
-                                </Typography>
-                            </CardContent>
 
-                        </Card>
-                    </div>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <div>
-                        <Card variant="outlined">
-                            <CardContent>
-                                <Typography variant="h5" component="div">
-                                    {resoltime.toFixed(2)} <AccessTimeIcon></AccessTimeIcon>
-                                </Typography>
-                                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                    Average Resolution Time (Hour)
-                                </Typography>
-                            </CardContent>
+    return (
+        <><Button style={{ display: 'flex', fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="45" height="45" />}</Button>
+            <div style={{ margin: '2rem' }}>
 
-                        </Card>
-                    </div>
-                </Grid>
-                {/* <Grid item xs={12} md={6}>
+                <Grid container spacing={2}>
+                    <Grid xs={12} md={12}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <HighchartsReact highcharts={Highcharts} options={options} />
+                        </div>
+                    </Grid>
+                    <Grid item xs={8} md={6}>
+                        <div>
+                            {/* <HighchartsReact highcharts={Highcharts} options={options} /> */}
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        {todayop}
+
+                                    </Typography>
+                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                        Open Tickets (Today)
+                                    </Typography>
+                                </CardContent>
+
+                            </Card>
+                        </div>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <div>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        {opticklastweek}
+                                    </Typography>
+                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                        Open Tickets (Last Week)
+                                    </Typography>
+
+                                </CardContent>
+
+                            </Card>
+                        </div>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <div>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        {restime.toFixed(2)} <AccessTimeIcon></AccessTimeIcon>
+                                    </Typography>
+                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                        Average Response Time (Hour)
+                                    </Typography>
+                                </CardContent>
+
+                            </Card>
+                        </div>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <div>
+                            <Card variant="outlined">
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        {resoltime.toFixed(2)} <AccessTimeIcon></AccessTimeIcon>
+                                    </Typography>
+                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                        Average Resolution Time (Hour)
+                                    </Typography>
+                                </CardContent>
+
+                            </Card>
+                        </div>
+                    </Grid>
+                    {/* <Grid item xs={12} md={6}>
                     <div >
                         <Card variant="outlined">
                             <CardContent>
@@ -754,20 +759,20 @@ return (
                         </Card>
                     </div>
                 </Grid> */}
-                
 
-                <Grid xs={12} md={12}>
-                    <div style={{ display: 'flex', justifyContent: 'center' ,padding: '20px'}}>
-                        <HighchartsReact highcharts={Highcharts} options={highprio} />
-                    </div>
+
+                    <Grid xs={12} md={12}>
+                        <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+                            <HighchartsReact highcharts={Highcharts} options={highprio} />
+                        </div>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </div>
+            </div>
 
 
 
-    </>
-)
+        </>
+    )
 
 }
 

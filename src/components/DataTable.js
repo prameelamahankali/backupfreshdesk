@@ -176,7 +176,7 @@ const DataTable = () => {
             field: 'id', headerName: 'ID', flex: 0.5,
             renderCell: (params) => (
                 <div>
-                    {conversations.get(params.value) != null ? <div><div><a href={conversations.get(params.value)} target="_blank"><td style={{ width: '5px' }}>{params.value}</td></a></div></div> : <div>{params.value}</div>}
+                    {conversations.get(params.value) != null ? <div><a href={conversations.get(params.value)} target="_blank"><span>{params.value}</span></a></div> : <div>{params.value}</div>}
 
                 </div>
 
@@ -363,7 +363,7 @@ const DataTable = () => {
 
                 // var open = []
                 for (let i = 0; i < data.length; i++) {
-                    // console.log('data0', data[i]); c
+                    // console.log('data0', data[i].id);
                     // switch (data[i]['status']) {
                     //     case 2:
                     //         return 'Open';
@@ -498,7 +498,8 @@ const DataTable = () => {
                 // setOpTick(optick)
                 setAllTick(data)
 
-                // console.log('Data', data) c
+                console.log('Data', data)
+
                 // console.log('data length', data.length) c
                 for (let i = 0; i < data.length; i++) {
                     // console.log('fro    ', data[i].id); c
@@ -595,7 +596,7 @@ const DataTable = () => {
 
                 })
                 .then((conv) => {
-                    // console.log('connn ', conv); c
+                    console.log('connn ', conv); 
                 })
                 .catch((error) => {
                     console.log('error in getConversations', error);
@@ -604,7 +605,7 @@ const DataTable = () => {
 
     }
 
-    // console.log('conversations ', conversations); c
+    // console.log('conversations ', conversations);
 
     function opentickets() {
         // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
@@ -794,110 +795,41 @@ const DataTable = () => {
         setValue(newValue);
     };
 
-    // useEffect(() =>{
-    //     // fetch('https://tmsone.freshdesk.com/api/v2/tickets?updated_since=2022-01-01T02:00:00Z', {
-    //     //         method: 'GET',
-    //     //         headers: new Headers({
-    //     //             'Content-Type': 'application/json',
-    //     //             'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-    //     //             'headers': 'Link' ,
-    //     //             'soNkJKPVmx1hxcr5Q9QT': 'X',
-    //     //             'Access-Control-Expose-Headers':'*'
+    useEffect(() => {
 
+        if (data.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+                getConversations(data[i].id);
+            }
+        }
 
-    //     //         })
-    //     //     })
-    //     //     .then((res) => {
-    //     //         console.log(...res.headers);
-    //     //         console.log(res.headers.entries());
-    //     //         for (var pair of res.headers.entries()) {
-    //     //             console.log(pair[0]+ ': '+ pair[1]);
-    //     //          }
-    //     //         console.log('gdhhsh',res.headers)
-    //     //         return res.json();
-    //     //     })
-    //     //     .then((result) => {
-    //     //         console.log('updated',result)
-    //     //     })
-    //     var data = '';
-
-    //     var config = {
-    //       method: 'get',
-    //       url: 'https://tmsone.freshdesk.com/api/v2/tickets?updated_since=2022-01-01T02:00:00Z',
-    //       headers: { 
-    //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==', 
-    //         'soNkJKPVmx1hxcr5Q9QT': 'X', 
-    //         'Cookie': '_x_w=2'
-    //       },
-    //       data : data
-    //     };
-
-    //     axios(config)
-    //     .then(function (response) {
-    //       console.log('updatedsince ',response);
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     });
-
-
-
-    // },[])
-//     const makeAPICall = async () => {
-//         try {
-//             const response = await fetch('/api/v2/tickets?updated_since=2022-01-01T02:00:00Z',{
-//                 method: 'GET',
-//                 headers: new Headers({
-//                     'Content-Type': 'application/json',
-//                     'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-//                     // 'headers': 'Link',
-//                     'soNkJKPVmx1hxcr5Q9QT': 'X',
-//                     'Access-Control-Expose-Headers': '*'
-
-
-//                 })
-//             })
-
-//         //const data = await response.json();
-//         //const headers = response.headers;
-//         //console.log('ddddddddd', { data })
-//         console.log('headers', response.headers )
-//     }
-//         catch (e) {
-//         console.log(e)
-//     }
-// }
-// useEffect(() => {
-//     makeAPICall();
-// }, [])
+    }, [])
 
 
 
 
 
 
+    return (
+        // <div style={{ borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)',height: 700, width: '97%',padding:'10px'}}>
+        <div style={{ height: 700, padding: '10px' }} >
+            {/* // <div style={{borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)', width: '97%', padding: '1rem'}}> */}
+            {/* <h1 style={{'textAlign':'right', width: '97%'}}>{tableData.length > 0 ? <div>Tickets : <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 3rem' }}>
+                <img src={pic} alt="DNOW" width="100" height="40" />
+                <div>
 
 
-return (
-    // <div style={{ borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)',height: 700, width: '97%',padding:'10px'}}>
-    <div style={{ height: 700, padding: '10px' }} >
-        {/* // <div style={{borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)', width: '97%', padding: '1rem'}}> */}
-        {/* <h1 style={{'textAlign':'right', width: '97%'}}>{tableData.length > 0 ? <div>Tickets : <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 3rem' }}>
-            <img src={pic} alt="DNOW" width="100" height="40" />
-            <div>
+                    {/* <button class="custButton" onClick={routeChange}> */}
 
+                    {/* </button> */}
 
-                {/* <button class="custButton" onClick={routeChange}> */}
-
-                {/* </button> */}
-
-                {/* <Redirect to="/HighCharts" /> */}
-                {/* <AnalyticsIcon onClick={window.Navigator}></AnalyticsIcon> */}
-                {/* <IconButton aria-label="fingerprint" color="secondary">
+                    {/* <Redirect to="/HighCharts" /> */}
+                    {/* <AnalyticsIcon onClick={window.Navigator}></AnalyticsIcon> */}
+                    {/* <IconButton aria-label="fingerprint" color="secondary">
                         <StepIcon />
                     </IconButton> */}
-                {/* <Modal
+                    {/* <Modal
                         open={open}
                         onClose={handleClose}
                         aria-labelledby="modal-modal-title"
@@ -908,81 +840,81 @@ return (
                         </Box>
                     </Modal> */}
 
+                </div>
             </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-            {/* <TimelineRoundedIcon fontSize='large'></TimelineRoundedIcon> */}
-            {/* <Button className='one' onClick={routeChange}>Graph</Button>
+            <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                {/* <TimelineRoundedIcon fontSize='large'></TimelineRoundedIcon> */}
+                {/* <Button className='one' onClick={routeChange}>Graph</Button>
 
                 <Button  className='two' onClick={opentickets}>Open:  <div> {opencount} </div> </Button>
                 <Button  className= 'three' onClick={closedtickets}>Closed:  <div> {closedcount}  </div></Button>
                 <Button  className='two' onClick={alltickets}>All:  <div> {tableData.length} </div></Button>  */}
-            <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="wrapped label tabs example"
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="wrapped label tabs example"
 
-            // onChange={(event, value) => { handleChange(value) }}
-            // indicatorColor="primary"
-            // textColor="primary"
-            // centered
-            >
-                <Tab
-                    value='two'
-                    onClick={routeChange}
-                    label = {<img src={img} alt="Graph" width="35" height="30" />}
+                // onChange={(event, value) => { handleChange(value) }}
+                // indicatorColor="primary"
+                // textColor="primary"
+                // centered
+                >
+                    <Tab
+                        value='two'
+                        onClick={routeChange}
+                        label={<img src={img} alt="Graph" width="35" height="30" />}
                     // label = "📈"
 
 
 
-                />
-                <Tab
-                    value='one'
-                    onClick={opentickets}
+                    />
+                    <Tab
+                        value='one'
+                        onClick={opentickets}
 
-                    label={'Open: ' + opencount}
+                        label={'Open: ' + opencount}
 
 
-                />
-                <Tab value='three' label={'Closed: ' + closedcount} onClick={closedtickets} />
-                <Tab value='four' label={'All: ' + tableData.length} onClick={alltickets} />
-            </Tabs>
-            {/* <h1 style={{'textAlign':'right','fontSize' : 'large'}}>{tableData.length > 0 ? <div>: <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
-            {/* <h1><div>All Tickets<button><a href={tableData}></a></button></div></h1> */}
-        </div>
-        {/* <h1 style={{'textAlign':'right','fontSize' : 'large'}}>{tableData.length > 0 ? <div>Tickets: <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
-        {/* <h1><div>All Tickets<button><a href={tableData}></a></button></div></h1> */}
-
-        <div style={{ display: 'flex', height: '100%' }}>
-            <div style={{ flexGrow: 1 }}>
-                <DataGrid
-
-                    // {...tableData.length > 0 ? tableData.map((el, idx) => {
-                    //     console.log('el ', el.id, idx);
-
-                    //     <td>{statusSwitch(el.status)}</td>
-
-                    // }) : null}
-
-                    rows={data}
-                    columns={columns}
-                    pageSize={12}
-                // rowsPerPageOptions={[5]}
-                // checkboxSelection
-                // onSelectionModelChange={({ selectionModel }) => {
-                //     const rowIds = selectionModel.map(rowId => parseInt(String(rowId), 10));
-                //     const rowsToDelete = tableData.filter(row => rowIds.includes(row.id));
-                //     setDeletedRows(rowsToDelete);
-                //     console.log(deletedRows);
-                // }}
-                />
-
+                    />
+                    <Tab value='three' label={'Closed: ' + closedcount} onClick={closedtickets} />
+                    <Tab value='four' label={'All: ' + tableData.length} onClick={alltickets} />
+                </Tabs>
+                {/* <h1 style={{'textAlign':'right','fontSize' : 'large'}}>{tableData.length > 0 ? <div>: <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
+                {/* <h1><div>All Tickets<button><a href={tableData}></a></button></div></h1> */}
             </div>
+            {/* <h1 style={{'textAlign':'right','fontSize' : 'large'}}>{tableData.length > 0 ? <div>Tickets: <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
+            {/* <h1><div>All Tickets<button><a href={tableData}></a></button></div></h1> */}
+
+            <div style={{ display: 'flex', height: '100%' }}>
+                <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+
+                        // {...tableData.length > 0 ? tableData.map((el, idx) => {
+                        //     console.log('el ', el.id, idx);
+
+                        //     <td>{statusSwitch(el.status)}</td>
+
+                        // }) : null}
+
+                        rows={data}
+                        columns={columns}
+                        pageSize={12}
+                    // rowsPerPageOptions={[5]}
+                    // checkboxSelection
+                    // onSelectionModelChange={({ selectionModel }) => {
+                    //     const rowIds = selectionModel.map(rowId => parseInt(String(rowId), 10));
+                    //     const rowsToDelete = tableData.filter(row => rowIds.includes(row.id));
+                    //     setDeletedRows(rowsToDelete);
+                    //     console.log(deletedRows);
+                    // }}
+                    />
+
+                </div>
+            </div>
+
+
         </div>
-
-
-    </div>
-)
+    )
 }
 
 export default DataTable
