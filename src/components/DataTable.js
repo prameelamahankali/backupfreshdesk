@@ -201,11 +201,11 @@ const DataTable = () => {
         },
 
         {
-            field: 'requester_id', headerName: 'CREATED BY', flex: 1, 'filterable': false,
+            field: 'requester.name', headerName: 'CREATED BY', flex: 1, 'filterable': false,
             renderCell: (params) => (
                 <div>
                     {/* {contacts.get(params.value)} */}
-                    {contacts.get(params.value) != null ? <td>{contacts.get(params.value)}</td> : <td>{'DNOW Contact'}</td>}
+                    {params.row.requester.name != null ? <td>{params.row.requester.name}</td> : <td>{'DNOW Contact'}</td>}
                 </div>
             ),
         },
@@ -235,11 +235,11 @@ const DataTable = () => {
         },
 
         {
-            field: "stats.closed_at", headerName: 'CLOSED AT', flex: 1,
+            field: "stats.resolved_at", headerName: 'CLOSED AT', flex: 1,
             'filterable': false,
             renderCell: (params) => (
                 <div>
-                    {(new Date(params.row.stats.closed_at).toLocaleDateString('en-US', { timeZone: 'UTC' }))}
+                    {params.row.stats.resolved_at != null ? (new Date(params.row.stats.resolved_at).toLocaleDateString('en-US', { timeZone: 'UTC' })) : '-'}
                     {/* {params.row.stats.closed_at} */}
                 </div>
             ),
@@ -339,39 +339,39 @@ const DataTable = () => {
         //     })
 
 
-        fetch('https://tmsone.freshdesk.com/api/v2/contacts', {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-                'soNkJKPVmx1hxcr5Q9QT': 'X'
-            })
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((d) => {
-                // console.log('data2', d); c
+        // fetch('https://tmsone.freshdesk.com/api/v2/contacts', {
+        //     method: 'GET',
+        //     headers: new Headers({
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+        //         'soNkJKPVmx1hxcr5Q9QT': 'X'
+        //     })
+        // })
+        //     .then((response) => {
+        //         return response.json();
+        //     })
+        //     .then((d) => {
+        //         // console.log('data2', d); c
 
-                // console.log('data 2 total ', d.length); c
+        //         // console.log('data 2 total ', d.length); c
 
-                const map1 = new Map();
-                for (let i = 0; i < d.length; i++) {
-                    //  map1.set(d[i].id, d[i].name);
-                    map1.set(d[i].id, d[i].name);
-                }
+        //         const map1 = new Map();
+        //         for (let i = 0; i < d.length; i++) {
+        //             //  map1.set(d[i].id, d[i].name);
+        //             map1.set(d[i].id, d[i].name);
+        //         }
 
-                // console.log('map ', map1); c
-                setContacts(map1)
-            })
-            .catch((error) => {
-                console.log('error in contacts', error);
-            })
+        //         // console.log('map ', map1); c
+        //         setContacts(map1)
+        //     })
+        //     .catch((error) => {
+        //         console.log('error in contacts', error);
+        //     })
     }, [])
 
 
     useEffect(() => {
-        fetch('https://tmsone.freshdesk.com/api/v2/tickets?include=stats', {
+        fetch('https://tmsone.freshdesk.com/api/v2/tickets?include=stats,requester', {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -955,8 +955,8 @@ const DataTable = () => {
     // //   var d = Math.floor((Math.abs(updated_at-created_at))/(1000*60*60*24));
     //   setDays(days)
 
-    function DayDiff(created_at, closed_at) {
-        var diff = Date.parse(closed_at) - Date.parse(created_at);
+    function DayDiff(created_at, resolved_at) {
+        var diff = Date.parse(resolved_at) - Date.parse(created_at);
         var d = isNaN(diff) ? '--' :
             // diff : diff,
             // ms : Math.floor( diff            % 1000 ),
@@ -1016,9 +1016,9 @@ const DataTable = () => {
     useEffect(() => {
 
         if (data.length > 0) {
-            for (let i = 0; i < data.length; i++) {
-                getConversations(data[i].id);
-            }
+            // for (let i = 0; i < data.length; i++) {
+            //     getConversations(data[i].id);
+            // }
         }
 
     }, [data])
