@@ -235,7 +235,7 @@ const DataTable = () => {
         },
 
         {
-            field: "stats.resolved_at", headerName: 'CLOSED AT', flex: 1,
+            field: "stats.resolved_at", headerName: 'CLOSED ON', flex: 1,
             'filterable': false,
             renderCell: (params) => (
                 <div>
