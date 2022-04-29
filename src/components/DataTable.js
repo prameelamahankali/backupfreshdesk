@@ -957,7 +957,7 @@ const DataTable = () => {
 
     function DayDiff(created_at, closed_at) {
         var diff = Date.parse(closed_at) - Date.parse(created_at);
-        var d = isNaN(diff) ? NaN :
+        var d = isNaN(diff) ? '--' :
             // diff : diff,
             // ms : Math.floor( diff            % 1000 ),
             // s  : Math.floor( diff /     1000 %   60 ),
