@@ -239,7 +239,7 @@ const DataTable = () => {
             'filterable': false,
             renderCell: (params) => (
                 <div>
-                    {params.row.stats.resolved_at != null ? (new Date(params.row.stats.resolved_at).toLocaleDateString('en-US', { timeZone: 'UTC' })) : '-'}
+                    {params.row.stats.resolved_at != null ? (new Date(params.row.stats.resolved_at).toLocaleDateString('en-US', { timeZone: 'UTC' })) : '--'}
                     {/* {params.row.stats.closed_at} */}
                 </div>
             ),
