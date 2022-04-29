@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, gridDateFormatter } from '@mui/x-data-grid'
 import pic from "../DNOWLogo.png";
 import img from "../statistics.png";
-import { Button, Modal, Box, StepIcon, IconButton, Tab, Tabs } from '@mui/material';
+import {  Modal, StepIcon, IconButton, Tab, Tabs } from '@mui/material';
 import td from '@mui/x-data-grid';
 import HighCharts from './HighCharts';
 // import AnalyticsIcon from '@mui/icons-material/Analytics';
@@ -23,6 +23,21 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { fontSize } from '@mui/system';
 import axios from 'axios';
+// import React, { useState, useEffect } from 'react'
+import { render } from 'react-dom'
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official';
+import pica from "../leftarrow.png";
+
+import { Box, Button, Grid, Item, Typography } from '@mui/material';
+// import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { GridPanelHeader } from '@mui/x-data-grid';
+// import { useNavigate } from "react-router-dom";
+// import { fontSize } from '@mui/system';
+
 
 // function statusSwitch(el) {
 //     switch (el) {
@@ -126,49 +141,23 @@ const DataTable = () => {
         setConversations(new Map(conversations.set(k, v)));
     }
     const [alltick, setAllTick] = useState([])
-    const [optick, setOpTick] = useState([])
+    // const [optick, setOpTick] = useState([])
 
     const [rows, setRows] = useState(tableData);
     const [deletedRows, setDeletedRows] = useState([]);
     const [value, setValue] = React.useState('one');
+    const [days, setDays] = useState([])
+    const [tickets, setTickets] = useState([])
+    const [graph, setGraph] = useState(new Map())
 
+    const [optick, setOpTick] = useState([])
+    const [todayop, setTodayOp] = useState(0)
+    const [opticklastweek, setOpTickLastWeek] = useState(0)
+    const [restime, setResTime] = useState(0)
+    const [resoltime, setresoltime] = useState(0)
+    const [high, sethigh] = useState([])
+    const [tableDataa, setTableDataa] = useState([])
 
-    // function statusSwitch(el) {
-    //     switch (el) {
-
-    //         case 2:
-    //             return 'Open';
-    //         case 3:
-    //             return 'Pending';
-    //         case 4:
-    //             return 'Resolved';
-    //         case 5:
-    //             return 'Closed';
-    //         case 6:
-    //             return 'Waiting on Customer';
-    //         case 7:
-    //             return 'Waiting on Third Party'
-
-    //         default:
-    //             break;
-    //     }
-    // }
-
-
-    // function prioritySwitch(el) {
-    //     switch (el) {
-    //         case 1:
-    //             el = 'Low';
-    //         case 2:
-    //             el = 'Medium';
-    //         case 3:
-    //             el = 'High';
-    //         case 4:
-    //             el = 'Urgent';
-    //         default:
-    //             break;
-    //     }
-    // }
 
 
     const columns = [
@@ -350,6 +339,38 @@ const DataTable = () => {
         //     })
 
 
+        fetch('https://tmsone.freshdesk.com/api/v2/contacts', {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                'soNkJKPVmx1hxcr5Q9QT': 'X'
+            })
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((d) => {
+                // console.log('data2', d); c
+
+                // console.log('data 2 total ', d.length); c
+
+                const map1 = new Map();
+                for (let i = 0; i < d.length; i++) {
+                    //  map1.set(d[i].id, d[i].name);
+                    map1.set(d[i].id, d[i].name);
+                }
+
+                // console.log('map ', map1); c
+                setContacts(map1)
+            })
+            .catch((error) => {
+                console.log('error in contacts', error);
+            })
+    }, [])
+
+
+    useEffect(() => {
         fetch('https://tmsone.freshdesk.com/api/v2/tickets?include=stats', {
             method: 'GET',
             headers: new Headers({
@@ -362,6 +383,19 @@ const DataTable = () => {
             .then((data) => {
 
                 // var open = []
+                const map1 = new Map();
+                var day = []
+                var tick = []
+                var closedtickets = []
+                let openticketst = []
+
+                var opentickets = []
+                var todayopentickets = []
+                var openticketslastweek = []
+                var responsetime = []
+                var resolutiontime = []
+                var high = []
+                var highprioritylastweek = []
                 for (let i = 0; i < data.length; i++) {
                     // console.log('data0', data[i].id);
                     // switch (data[i]['status']) {
@@ -413,10 +447,10 @@ const DataTable = () => {
                     if (data[i]['status'] === 7) {
                         data[i]['status'] = 'Waiting on Third Party';
                     }
-                }
+                // }
                 // setData(open)
                 // setOpenCount(open.length);
-                for (let i = 0; i < data.length; i++) {
+                // for (let i = 0; i < data.length; i++) {
                     // console.log('data0', data[i]); c
                     if (data[i]['priority'] === 1) {
                         data[i]['priority'] = 'Low';
@@ -430,7 +464,7 @@ const DataTable = () => {
                     if (data[i]['priority'] === 4) {
                         data[i]['priority'] = 'Urgrnt';
                     }
-                }
+                // }
                 // for (let i = 0; i < data.length; i++) {
                 //     console.log('created date', data[i]['created_at']);
                 //     console.log('updated date', data[i]['updated_at']);
@@ -454,9 +488,10 @@ const DataTable = () => {
                 // }
                 // console.log('diff',dateDiff)
                 // }
-                var closedtickets = []
+                
+                // var closedtickets = []
 
-                for (let i = 0; i < data.length; i++) {
+                // for (let i = 0; i < data.length; i++) {
                     // console.log('tab     ', data[i]); c
                     if (data[i].status == 'Closed') {
                         // console.log('Closed', data[i].status); c
@@ -464,20 +499,23 @@ const DataTable = () => {
                     }
                     // console.log('closedtickets', closedtickets, closedtickets.length) c
 
-                }
-                setClosedCount(closedtickets.length)
+                // }
+                // setClosedCount(closedtickets.length)
 
-                let opentickets = []
+                // let openticketst = []
 
-                for (let i = 0; i < data.length; i++) {
+                // for (let i = 0; i < data.length; i++) {
                     // console.log('tab     ', data[i]); c
                     if (data[i].status == 'Open') {
                         // console.log('Open', data[i].status); c
-                        opentickets.push(data[i])
+                        openticketst.push(data[i])
                     }
                     // console.log('opentickets', opentickets, opentickets.length) c
 
-                }
+                // }
+
+              
+                
 
 
                 // setTableData(optick)
@@ -487,8 +525,9 @@ const DataTable = () => {
 
                 // console.log("########################################")
 
-                setData(opentickets);
-                setTableData(data);
+                // setData(openticketst);
+                // setOpenCount(openticketst.length)
+                // setTableData(data);
                 // console.log('open count ',opencount);
                 // var d = parseInt(data.length) - parseInt(opencount)
                 // console.log('closed',d);
@@ -496,48 +535,227 @@ const DataTable = () => {
 
                 // setTableData(close)
                 // setOpTick(optick)
-                setAllTick(data)
+                // setAllTick(data)
 
-                console.log('Data', data)
+                // console.log('Data', data)
 
                 // console.log('data length', data.length) c
-                for (let i = 0; i < data.length; i++) {
-                    // console.log('fro    ', data[i].id); c
-                    getConversations(data[i].id);
+                // for (let i = 0; i < data.length; i++) {
+                //     // console.log('fro    ', data[i].id); c
+                //     getConversations(data[i].id);
 
+                // }
+///////////////////////HIGH CHARTS
+                // const map1 = new Map();
+                // var day = []
+                // var tick = []
+
+                
+                // for (let i = 0; i < data.length; i++) {
+                    // console.log('id', data[i].id); c
+
+
+                    data[i]['diff'] = DayDiff(data[i]['created_at'], data[i]['stats']['resolved_at'])
+
+                    tick.push(data[i].id)
+                    day.push(DayDiff(data[i]['created_at'], data[i]['stats']['resolved_at']))
+                    map1.set(data[i].id, data[i].diff);
+                    // console.log('difference', data[i].diff) 
+
+                // }
+                //  console.log('map1', map1.keys())  
+                // setDays(day)
+                // setTickets(tick)
+                // setGraph(map1)
+
+                // console.log('data[i].status ',data[i].status , data[i].status == 'Open');
+
+                
+                // for (let i = 0; i < data.length; i++) {
+                    // console.log('tab     ', data[i]); c
+                    if (data[i].status == 'Open') {
+                        // console.log('status', data[i].status, new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }) == new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })); 
+                        opentickets.push(data[i])
+                    
+                        // console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
+                        if (new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }) == new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })) {
+                            
+                            // console.log('opentoday', data[i]['created_at']) 
+                            todayopentickets.push(data[i])
+                            // if ((new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' })<new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' })){
+                            //     console.log('cretaed', data[i]['created_at'])
+
+                            // }
+                        }
+                    }
+
+
+                        var created = new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        var weekAgoDate = new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        // console.log('datesss ', created, weekAgoDate, today); c
+                        if (created < today && created > weekAgoDate) {
+                            // console.log('dates open', created); c
+                            openticketslastweek.push(data[i])
+                        }
+                    // }
+                    var created_at = (new Date(data[i]['created_at']).getHours());
+                    var created_at = (new Date(data[i]['created_at']).toLocaleTimeString());
+                    var first_responded_at = (new Date(data[i]['stats']['first_responded_at']).toLocaleTimeString());
+                    // var first_responded_at = (new Date(data[i]['stats']['first_responded_at']).getHours());
+                    var closed_at = (new Date(data[i]['stats']['resolved_at']).toLocaleTimeString());
+                    // var closed_at = (new Date(data[i]['stats']['resolved_at']).getHours());
+                    // console.log('kkkkkkkkkkkk',created_at,first_responded_at,closed_at) c
+
+
+                    const dateOne = data[i]['created_at'];
+
+                    const dateTwo = data[i]['stats']['first_responded_at'];
+                    const dateOneObj = new Date(dateOne);
+                    const dateTwoObj = new Date(dateTwo);
+                    // console.log('dateone', dateOne, dateTwo, dateOneObj, dateTwoObj) c
+
+                    // const milliseconds = Math.abs(dateTwoObj - dateOneObj);
+                    // const hours = milliseconds / 3600;
+                    // const respon = hours / 30;
+                    if (dateOne != null && dateTwo != null) {
+                        // let diffTime = Math.abs(new Date(dateOne) - new Date(dateTwo));
+                        // let days = diffTime / (24 * 60 * 60 * 1000);
+                        // let hours = (days % 1) * 24;
+                        // let minutes = (hours % 1) * 60;
+                        // let secs = (minutes % 1) * 60;
+                        // [days, hours, minutes, secs] = [Math.floor(days), Math.floor(hours), Math.floor(minutes), Math.floor(secs)]
+
+                        // console.log(data[i].id ,'timeeeee'  ,days + 'd', hours + 'h', minutes + 'm', secs + 's');
+
+
+                        const milliseconds = Math.abs(dateTwoObj - dateOneObj);
+                        const hours = Math.round(milliseconds / 36e5);
+                        const time =  ((hours / 2));
+                        responsetime.push(time)
+
+                        // console.log('hourssss ', milliseconds, hours); c
+
+
+                    }
+                    else {
+                        responsetime.push(0)
+
+                    }
+
+                    const dOne = data[i]['created_at'];
+                    const dTwo = data[i]['stats']['resolved_at'];
+                    // console.log('done',dOne,dTwo)
+
+
+                    if (dOne != null && dTwo != null) {
+
+                        const dOneObj = new Date(dOne);
+                        const dTwoObj = new Date(dTwo);
+                        // console.log('done', dOne, dTwo, dOneObj, dTwoObj) c
+                        const milliseconds = Math.abs(dTwoObj - dOneObj);
+                        const hours = Math.round(milliseconds / 36e5);
+                        const time =  Math.round((hours / 24)*8)
+                         
+                        const minu = Math.round(milliseconds / 60000);
+
+                        resolutiontime.push(time)
+
+                        // console.log('resolhourssss ', hours, minu); c
+
+                    }
+                    else {
+                        resolutiontime.push(0)
+                    }
+                    // var high = data[i].priority
+
+                    // console.log('highhhh', high) 
+                    // var created = new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    // var weekAgoDate = new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    // var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    // // console.log('datesss ', created, weekAgoDate, today); c
+                    // if (created < today && created > weekAgoDate) {
+
+                    //     // console.log('high priority', data[i].status); c
+                    //     openticketslastweek.push(data[i])
+                    // }
+                    if (data[i].priority == 1 || data[i].priority == 4) {
+                        // console.log('status', data[i].priority); c
+                        high.push(data[i])
+                        // console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
+                        var created = new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        var eightweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 56)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        // console.log('eight week ago')
+                        // console.log('datesss ', created, eightweekAgoDate, today);
+                        if (created < today && created > eightweekAgoDate) {
+                            // console.log('----high created', created); c
+                            highprioritylastweek.push(data[i])
+                        }
+
+                    }
+
+            
+                    // console.log('highprioritylastweek', highprioritylastweek,    highprioritylastweek.length) 
                 }
 
-            })
+                    // var date1 = new Date(data[i]['created_at']).getTime() / 1000;
 
-        fetch('https://tmsone.freshdesk.com/api/v2/contacts', {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-                'soNkJKPVmx1hxcr5Q9QT': 'X'
-            })
+                    // var date2 = new Date(data[i]['stats']['first_responded_at']).getTime() / 1000;
+
+                    // var difference = (date2 - date1) / 60 / 60;
+
+
+                    // var res = difference / 30
+                    // console.log(res, 'difference');
+
+
+                    // console.log('first_responded_at', first_responded_at); c
+                    // console.log('created_at', created_at); c
+                    // console.log('closed_at', closed_at); c
+
+                
+
+                    // console.log('openticketslastweek', openticketslastweek) 
+                    setOpTickLastWeek(openticketslastweek.length)
+                    // console.log('todaytopentickets', todayopentickets) 
+                    setTodayOp(todayopentickets.length)
+
+                    // console.log('opentickets', opentickets, opentickets.length)
+                    // console.log('responsetime', responsetime) 
+                    // console.log('resolutiontime', resolutiontime) 
+                // }
+                setAllTick(data)
+                setDays(day)
+                setTickets(tick)
+                setGraph(map1)
+                setData(openticketst);
+                setOpenCount(openticketst.length)
+                setTableData(data);
+                setClosedCount(closedtickets.length)
+                setOpTick(opentickets)
+                const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+                var avg = average(responsetime)
+                // console.log('Average response', avg) 
+                setResTime(avg)
+
+                const resolvetime = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+                var resolve = resolvetime(resolutiontime)
+                // console.log('Average resolutiontime', resolve) 
+                setresoltime(resolve)
+                sethigh(highprioritylastweek.length)
+
+                
+                setTableDataa(data)
+
+
+            
         })
-            .then((response) => {
-                return response.json();
+            .catch((err) => {
+                console.log('Error in include Stats ', err);
             })
-            .then((d) => {
-                // console.log('data2', d); c
 
-                // console.log('data 2 total ', d.length); c
-
-                const map1 = new Map();
-                for (let i = 0; i < d.length; i++) {
-                    //  map1.set(d[i].id, d[i].name);
-                    map1.set(d[i].id, d[i].name);
-                }
-
-                // console.log('map ', map1); c
-                setContacts(map1)
-            })
-            .catch((error) => {
-                console.log('error', error);
-            })
-    }, [])
+    },[])
     // console.log('ot', data) c
 
     // console.log('tabledata', tableData); c
@@ -596,7 +814,7 @@ const DataTable = () => {
 
                 })
                 .then((conv) => {
-                    console.log('connn ', conv); 
+                    // console.log('connn ', conv); 
                 })
                 .catch((error) => {
                     console.log('error in getConversations', error);
@@ -698,12 +916,12 @@ const DataTable = () => {
                 // console.log('open', tableData[i].status); c
                 openticketsArr.push(tableData[i])
             }
-            // console.log('opentickets', opentickets) c
+            // console.log('opentickets', openticketsArr) 
         }
         // setTableData(optick)
         setData(openticketsArr)
         setOpenCount(openticketsArr.length);
-        // console.log('opentickets length', opentickets.length) c
+        // console.log('opentickets length', openticketsArr.length) 
 
     }
     function alltickets() {
@@ -788,7 +1006,7 @@ const DataTable = () => {
     let navigate = useNavigate();
     const routeChange = () => {
         let path = `high`;
-        navigate(path);
+        navigate(path,{state:{days: days, tableDataa: tableDataa, graph: graph,todayop: todayop,opticklastweek:opticklastweek,high:high,restime: restime,resoltime: resoltime}});
     }
 
     const handleChange = (event, newValue) => {
@@ -803,9 +1021,163 @@ const DataTable = () => {
             }
         }
 
-    }, [])
+    }, [data])
 
 
+    useEffect(() => {
+        fetch(`https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%20'2022-01-02'%20AND%20(priority:3%20OR%20priority:4)"`, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                'headers': 'Link',
+                'soNkJKPVmx1hxcr5Q9QT': 'X',
+                'Access-Control-Expose-Headers': '*'
+
+
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((data) => {
+                // console.log('updated', data, data.results.length, data.total)
+
+                var eightweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 56));
+                var sevenweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 49));
+                var sixthweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 42));
+                var fifthweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 35));
+                var fourthweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 28));
+                var thirdweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 21));
+                var secondweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 14));
+                var firstweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 7));
+
+                var today = new Date();
+                var perweek = []
+
+                var highArr = []
+                var eightweek = []
+                var seventhweek = []
+                var sixthweek = []
+                var fifthweek = []
+                var fourthweek = []
+                var thirdweek = []
+                var secondweek = []
+                var firstweek = []
+               
+
+                for (let i = 0; i < data.results.length; i++) {
+
+
+
+
+
+                    var created = new Date(data.results[i]['created_at']);
+
+
+
+                    if (data.results[i].priority == 3 || data.results[i].priority == 4) {
+                        // console.log('status', data.results[i].priority);
+                        highArr.push(data.results[i])
+                        if (created >= eightweekAgoDate && created <= sevenweekAgoDate) {
+                            // console.log('----high created', data.results[i]);
+                            eightweek.push(data.results[i])
+
+                            // perweek.push(eightweek.length)
+
+                            // console.log('888'); 
+                            // console.log(created,eightweekAgoDate,sevenweekAgoDate,data.results[i].id); 
+
+                        }
+
+                        else if (created >= sevenweekAgoDate && created <= sixthweekAgoDate) {
+                            seventhweek.push(data.results[i])
+
+                            // console.log('777'); 
+                            // console.log(created,sevenweekAgoDate,sixthweekAgoDate,data.results[i].id); 
+
+                        }
+                        else if (created >= sixthweekAgoDate && created <= fifthweekAgoDate) {
+                            sixthweek.push(data.results[i])
+
+                            // console.log('666');
+                            // console.log(created,sixthweekAgoDate,fifthweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= fifthweekAgoDate && created <= fourthweekAgoDate) {
+                            fifthweek.push(data.results[i])
+
+                            // console.log('555');
+                            // console.log(created,fifthweekAgoDate,fourthweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= fourthweekAgoDate && created <= thirdweekAgoDate) {
+                            fourthweek.push(data.results[i])
+
+                            // console.log('444');
+                            // console.log(created,fourthweekAgoDate,thirdweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= thirdweekAgoDate && created <= secondweekAgoDate) {
+                            thirdweek.push(data.results[i])
+
+                            // console.log('333');
+                            // console.log(created,thirdweekAgoDate,secondweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= secondweekAgoDate && created <= firstweekAgoDate) {
+                            secondweek.push(data.results[i])
+
+                            // console.log('222');
+                            // console.log(created,secondweekAgoDate,firstweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= firstweekAgoDate && created <= today) {
+                            firstweek.push(data.results[i])
+
+                            // console.log('111');
+                            // console.log(created,firstweekAgoDate,today,data.results[i].id);
+
+                        }
+
+                    }
+
+                }
+                perweek.push(firstweek.length)
+                perweek.push(secondweek.length)
+                perweek.push(thirdweek.length)
+                perweek.push(fourthweek.length)
+                perweek.push(fifthweek.length)
+                perweek.push(sixthweek.length)
+                perweek.push(seventhweek.length)
+
+                perweek.push(eightweek.length)
+
+
+
+
+
+                sethigh(perweek)
+
+
+
+                // // console.log('Dates', created, eightweekAgoDate, sevenweekAgoDate, sixthweekAgoDate, fifthweekAgoDate, fourthweekAgoDate, thirdweekAgoDate, secondweekAgoDate, firstweekAgoDate, today);
+                // console.log('high array', high);
+                // // // console.log('highprio array', highprio);
+                // console.log('weekly data',perweek);
+                // console.log(firstweek.length,secondweek.length,thirdweek.length,fourthweek.length, fifthweek.length,sixthweek.length, seventhweek.length, eightweek.length);
+
+            })
+
+
+
+
+
+
+
+
+
+    }, [data])
 
 
 
