@@ -5,6 +5,7 @@ import DataTableAxios from './components/DataTableAxios';
 import MyChart from './components/MyChart';
 import ReChart from './components/ReChart';
 import HighCharts from './components/HighCharts';
+import NoConvPage from './components/NoConvPage';
 
 import { Routes, Route } from 'react-router-dom';
 // const cors = require("cors");
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path='/' element={<DataTable/>}/>
         <Route path='/high' element={<HighCharts/>}/>
+        <Route path='/noconv' element={<NoConvPage/>}/>
       </Routes>
       
       {/* <MyChart/> */}

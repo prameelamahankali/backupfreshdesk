@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 // import { render } from 'react-dom'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official';
-import pic from "../leftarrow.png";
+import pic from "../left.png";
 
 import { Box, Button, Grid, Item, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -682,7 +682,7 @@ const HighCharts = () => {
     },[])
 
     return (
-        <><Button style={{ display: 'flex', fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="45" height="45" />}</Button>
+        <><Button style={{ display: 'flex', fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
             <div style={{ margin: '2rem' }}>
 
                 <Grid container spacing={2}>
@@ -701,7 +701,7 @@ const HighCharts = () => {
 
                                     </Typography>
                                     <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        Open Tickets (Today)
+                                        Open Tickets (Till Date)
                                     </Typography>
                                 </CardContent>
 

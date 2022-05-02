@@ -1,28 +1,38 @@
 
 import React, { useState, useEffect } from 'react'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridApi, GridCellValue, gridDateFormatter } from '@mui/x-data-grid'
 import pic from "../DNOWLogo.png";
 import img from "../statistics.png";
-import { Button, Modal, Box, StepIcon, IconButton, Tab, Tabs } from '@mui/material';
+import { Modal, StepIcon, IconButton, Tab, Tabs } from '@mui/material';
 import td from '@mui/x-data-grid';
 import HighCharts from './HighCharts';
 // import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import ClosedCaptionDisabledOutlinedIcon from '@mui/icons-material/ClosedCaptionDisabledOutlined';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import { Redirect } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import Card from '@mui/material/Card';
-
 import TimelineIcon from '@mui/icons-material/Timeline';
 import TimelineRoundedIcon from '@mui/icons-material/TimelineRounded';
-// import Tabs from '@mui/material/Tab';
-// import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { fontSize } from '@mui/system';
 import axios from 'axios';
+import { render } from 'react-dom'
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official';
+import pica from "../leftarrow.png";
+import { Box, Button, Grid, Item, Typography } from '@mui/material';
+// import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { GridPanelHeader } from '@mui/x-data-grid';
+import { Redirect } from 'react-router-dom'
+// import { useNavigate } from "react-router-dom";
+// import { fontSize } from '@mui/system';
+
 
 // function statusSwitch(el) {
 //     switch (el) {
@@ -126,63 +136,107 @@ const DataTable = () => {
         setConversations(new Map(conversations.set(k, v)));
     }
     const [alltick, setAllTick] = useState([])
-    const [optick, setOpTick] = useState([])
+    // const [optick, setOpTick] = useState([])
 
     const [rows, setRows] = useState(tableData);
     const [deletedRows, setDeletedRows] = useState([]);
     const [value, setValue] = React.useState('one');
+    const [days, setDays] = useState([])
+    const [tickets, setTickets] = useState([])
+    const [graph, setGraph] = useState(new Map())
 
+    const [optick, setOpTick] = useState([])
+    const [todayop, setTodayOp] = useState(0)
+    const [opticklastweek, setOpTickLastWeek] = useState(0)
+    const [restime, setResTime] = useState(0)
+    const [resoltime, setresoltime] = useState(0)
+    const [high, sethigh] = useState([])
+    const [tableDataa, setTableDataa] = useState([])
 
-    // function statusSwitch(el) {
-    //     switch (el) {
-
-    //         case 2:
-    //             return 'Open';
-    //         case 3:
-    //             return 'Pending';
-    //         case 4:
-    //             return 'Resolved';
-    //         case 5:
-    //             return 'Closed';
-    //         case 6:
-    //             return 'Waiting on Customer';
-    //         case 7:
-    //             return 'Waiting on Third Party'
-
-    //         default:
-    //             break;
-    //     }
-    // }
-
-
-    // function prioritySwitch(el) {
-    //     switch (el) {
-    //         case 1:
-    //             el = 'Low';
-    //         case 2:
-    //             el = 'Medium';
-    //         case 3:
-    //             el = 'High';
-    //         case 4:
-    //             el = 'Urgent';
-    //         default:
-    //             break;
-    //     }
-    // }
 
 
     const columns = [
         {
             field: 'id', headerName: 'ID', flex: 0.5,
-            renderCell: (params) => (
-                <div>
-                    {conversations.get(params.value) != null ? <div><a href={conversations.get(params.value)} target="_blank"><span>{params.value}</span></a></div> : <div>{params.value}</div>}
+            // renderCell: (params) => (
+            //     <div>
+            //         {/* {conversations.get(params.value) != null ? <div><a href={conversations.get(params.value)} target="_blank"><span>{params.value}</span></a></div> : <div>{params.value}</div>} */}
+            //         {params.value != null ? <div><button onClick={getConversations(params.value)}><span>{params.value}</span></button></div> : <div>{params.value}</div>}
+            //     </div>
 
-                </div>
+            // ),
 
-            ),
+
+            renderCell: (params) => {
+                const onClick = (e) => {
+                    e.stopPropagation(); // don't select this row after clicking
+                    let ticketId = params.value;
+                    if (ticketId != null) {
+                        fetch(`https://tmsone.freshdesk.com/api/v2/tickets/${ticketId}/conversations`, {
+                            method: 'GET',
+                            headers: new Headers({
+                                'Content-Type': 'application/json',
+                                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                                'soNkJKPVmx1hxcr5Q9QT': 'X'
+                            })
+                        })
+                            .then((response) => {
+                                return response.json();
+
+
+                            })
+                            .then((result) => {
+                                // console.log('url length', result.length); c
+                                // console.log('url data', result); c
+                                // console.log(result)
+                                const map2 = new Map();
+                                var convArr = [];
+                                for (let i = 0; i < result.length; i++) {
+
+                                    if (result[i].body_text.includes('https://tmsone')) {
+
+                                        let value = result[i].body_text.split('https://tmsone')
+                                        let value1 = value[1].split(" ")
+                                        let url = 'https://tmsone' + value1[0]
+                                        // console.log(url, "urlllll")             //here I am getting only url
+                                        // map2.set(ticketId, result[i].body_text);
+                                        // map2.set(ticketId, url);
+                                        // conversations.set(ticketId, url);
+                                        // convArr.push({'ticketId-'+ticketId : url})
+                                        if (url != null || url != undefined || url != '') {
+                                            //convArr[ticketId] = url;
+
+                                            // map2.set(ticketId, url);
+                                            //setConversations(new Map(map2));
+
+                                            // updateMap(ticketId, url);
+                                            // console.log('urle ', url);
+                                            window.open(url, '_blank');
+                                        }
+                                        else {
+                                            Redirect();
+
+                                        }
+
+                                        // console.log('map2 ',convArr);
+                                    }
+                                }
+
+                                // console.log('map2 ',map2);
+
+                                // console.log("convArr   ", convArr); c
+                                // return convArr;
+
+                            })
+                            .catch((error) => {
+                                console.log('error in getConversations', error);
+                            })
+                    }
+                };
+
+                return <button style={{ justifyContent: 'flex-start' }} onClick={onClick}>{params.value}</button>;
+            },
         },
-
         {
             field: 'status', headerName: 'STATUS', flex: 0.8,
             // renderCell: (params) => (
@@ -212,11 +266,11 @@ const DataTable = () => {
         },
 
         {
-            field: 'requester_id', headerName: 'CREATED BY', flex: 1, 'filterable': false,
+            field: 'requester.name', headerName: 'CREATED BY', flex: 1, 'filterable': false,
             renderCell: (params) => (
                 <div>
                     {/* {contacts.get(params.value)} */}
-                    {contacts.get(params.value) != null ? <td>{contacts.get(params.value)}</td> : <td>{'DNOW Contact'}</td>}
+                    {params.row.requester.name != null ? <td>{params.row.requester.name}</td> : <td>{'DNOW Contact'}</td>}
                 </div>
             ),
         },
@@ -246,11 +300,11 @@ const DataTable = () => {
         },
 
         {
-            field: "stats.closed_at", headerName: 'CLOSED AT', flex: 1,
+            field: "stats.resolved_at", headerName: 'CLOSED ON', flex: 1,
             'filterable': false,
             renderCell: (params) => (
                 <div>
-                    {(new Date(params.row.stats.closed_at).toLocaleDateString('en-US', { timeZone: 'UTC' }))}
+                    {params.row.stats.resolved_at != null ? (new Date(params.row.stats.resolved_at).toLocaleDateString('en-US', { timeZone: 'UTC' })) : '--'}
                     {/* {params.row.stats.closed_at} */}
                 </div>
             ),
@@ -350,7 +404,39 @@ const DataTable = () => {
         //     })
 
 
-        fetch('https://tmsone.freshdesk.com/api/v2/tickets?include=stats', {
+        // fetch('https://tmsone.freshdesk.com/api/v2/contacts', {
+        //     method: 'GET',
+        //     headers: new Headers({
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+        //         'soNkJKPVmx1hxcr5Q9QT': 'X'
+        //     })
+        // })
+        //     .then((response) => {
+        //         return response.json();
+        //     })
+        //     .then((d) => {
+        //         // console.log('data2', d); c
+
+        //         // console.log('data 2 total ', d.length); c
+
+        //         const map1 = new Map();
+        //         for (let i = 0; i < d.length; i++) {
+        //             //  map1.set(d[i].id, d[i].name);
+        //             map1.set(d[i].id, d[i].name);
+        //         }
+
+        //         // console.log('map ', map1); c
+        //         setContacts(map1)
+        //     })
+        //     .catch((error) => {
+        //         console.log('error in contacts', error);
+        //     })
+    }, [])
+
+
+    useEffect(() => {
+        fetch('https://tmsone.freshdesk.com/api/v2/tickets?include=stats,requester', {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -361,7 +447,26 @@ const DataTable = () => {
             .then((data) => data.json())
             .then((data) => {
 
+
+                // Access value associated with the key
+                var item_value = sessionStorage.getItem("item_key");
+
+                // Assign value to a key
+
                 // var open = []
+                const map1 = new Map();
+                var day = []
+                var tick = []
+                var closedtickets = []
+                let openticketst = []
+
+                var opentickets = []
+                var todayopentickets = []
+                var openticketslastweek = []
+                var responsetime = []
+                var resolutiontime = []
+                var high = []
+                var highprioritylastweek = []
                 for (let i = 0; i < data.length; i++) {
                     // console.log('data0', data[i].id);
                     // switch (data[i]['status']) {
@@ -413,10 +518,10 @@ const DataTable = () => {
                     if (data[i]['status'] === 7) {
                         data[i]['status'] = 'Waiting on Third Party';
                     }
-                }
-                // setData(open)
-                // setOpenCount(open.length);
-                for (let i = 0; i < data.length; i++) {
+                    // }
+                    // setData(open)
+                    // setOpenCount(open.length);
+                    // for (let i = 0; i < data.length; i++) {
                     // console.log('data0', data[i]); c
                     if (data[i]['priority'] === 1) {
                         data[i]['priority'] = 'Low';
@@ -430,33 +535,34 @@ const DataTable = () => {
                     if (data[i]['priority'] === 4) {
                         data[i]['priority'] = 'Urgrnt';
                     }
-                }
-                // for (let i = 0; i < data.length; i++) {
-                //     console.log('created date', data[i]['created_at']);
-                //     console.log('updated date', data[i]['updated_at']);
-                // switch (data[i]['updated_at'] - data[i]['created_at']) {
+                    // }
+                    // for (let i = 0; i < data.length; i++) {
+                    //     console.log('created date', data[i]['created_at']);
+                    //     console.log('updated date', data[i]['updated_at']);
+                    // switch (data[i]['updated_at'] - data[i]['created_at']) {
 
-                // }
-                // var diff = Math.floor((Date.parse('updated_at') - Date.parse('created_at')) / 86400000);
-                // console.log('diffff',diff)
+                    // }
+                    // var diff = Math.floor((Date.parse('updated_at') - Date.parse('created_at')) / 86400000);
+                    // console.log('diffff',diff)
 
-                // function dateDiff( created_at, updated_at ) {
-                //     var diff = Date.parse( updated_at ) - Date.parse( created_at ); 
-                //     return isNaN( diff ) ? NaN : {
-                //         diff : diff,
-                //         ms : Math.floor( diff            % 1000 ),
-                //         s  : Math.floor( diff /     1000 %   60 ),
-                //         m  : Math.floor( diff /    60000 %   60 ),
-                //         h  : Math.floor( diff /  3600000 %   24 ),
-                //         d  : Math.floor( diff / 86400000        )
-                //     };
+                    // function dateDiff( created_at, updated_at ) {
+                    //     var diff = Date.parse( updated_at ) - Date.parse( created_at ); 
+                    //     return isNaN( diff ) ? NaN : {
+                    //         diff : diff,
+                    //         ms : Math.floor( diff            % 1000 ),
+                    //         s  : Math.floor( diff /     1000 %   60 ),
+                    //         m  : Math.floor( diff /    60000 %   60 ),
+                    //         h  : Math.floor( diff /  3600000 %   24 ),
+                    //         d  : Math.floor( diff / 86400000        )
+                    //     };
 
-                // }
-                // console.log('diff',dateDiff)
-                // }
-                var closedtickets = []
+                    // }
+                    // console.log('diff',dateDiff)
+                    // }
 
-                for (let i = 0; i < data.length; i++) {
+                    // var closedtickets = []
+
+                    // for (let i = 0; i < data.length; i++) {
                     // console.log('tab     ', data[i]); c
                     if (data[i].status == 'Closed') {
                         // console.log('Closed', data[i].status); c
@@ -464,147 +570,329 @@ const DataTable = () => {
                     }
                     // console.log('closedtickets', closedtickets, closedtickets.length) c
 
-                }
-                setClosedCount(closedtickets.length)
+                    // }
+                    // setClosedCount(closedtickets.length)
 
-                let opentickets = []
+                    // let openticketst = []
 
-                for (let i = 0; i < data.length; i++) {
+                    // for (let i = 0; i < data.length; i++) {
                     // console.log('tab     ', data[i]); c
                     if (data[i].status == 'Open') {
                         // console.log('Open', data[i].status); c
-                        opentickets.push(data[i])
+                        openticketst.push(data[i])
                     }
                     // console.log('opentickets', opentickets, opentickets.length) c
 
+                    // }
+
+
+
+
+
+                    // setTableData(optick)
+                    // setClosedCount(closedtickets)
+                    // setData(closedtickets)
+
+
+                    // console.log("########################################")
+
+                    // setData(openticketst);
+                    // setOpenCount(openticketst.length)
+                    // setTableData(data);
+                    // console.log('open count ',opencount);
+                    // var d = parseInt(data.length) - parseInt(opencount)
+                    // console.log('closed',d);
+                    // setClosedCount(d);
+
+                    // setTableData(close)
+                    // setOpTick(optick)
+                    // setAllTick(data)
+
+                    // console.log('Data', data)
+
+                    // console.log('data length', data.length) c
+                    // for (let i = 0; i < data.length; i++) {
+                    //     // console.log('fro    ', data[i].id); c
+                    //     getConversations(data[i].id);
+
+                    // }
+                    ///////////////////////HIGH CHARTS
+                    // const map1 = new Map();
+                    // var day = []
+                    // var tick = []
+
+
+                    // for (let i = 0; i < data.length; i++) {
+                    // console.log('id', data[i].id); c
+
+
+                    data[i]['diff'] = DayDiff(data[i]['created_at'], data[i]['stats']['resolved_at'])
+
+                    tick.push(data[i].id)
+                    day.push(DayDiff(data[i]['created_at'], data[i]['stats']['resolved_at']))
+                    map1.set(data[i].id, data[i].diff);
+                    // console.log('difference', data[i].diff) 
+
+                    // }
+                    //  console.log('map1', map1.keys())  
+                    // setDays(day)
+                    // setTickets(tick)
+                    // setGraph(map1)
+
+                    // console.log('data[i].status ',data[i].status , data[i].status == 'Open');
+
+
+                    // for (let i = 0; i < data.length; i++) {
+                    // console.log('tab     ', data[i]); c
+                    if (data[i].status == 'Open') {
+                        // console.log('status', data[i].status, new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }) == new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })); 
+                        opentickets.push(data[i])
+
+                        // console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
+                        if (new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }) == new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })) {
+
+                            // console.log('opentoday', data[i]['created_at']) 
+                            todayopentickets.push(data[i])
+                            // if ((new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' })<new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' })){
+                            //     console.log('cretaed', data[i]['created_at'])
+
+                            // }
+                        }
+                    }
+
+
+                    var created = new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    var weekAgoDate = new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    // console.log('datesss ', created, weekAgoDate, today); c
+                    if (created < today && created > weekAgoDate) {
+                        // console.log('dates open', created); c
+                        openticketslastweek.push(data[i])
+                    }
+                    // }
+                    var created_at = (new Date(data[i]['created_at']).getHours());
+                    var created_at = (new Date(data[i]['created_at']).toLocaleTimeString());
+                    var first_responded_at = (new Date(data[i]['stats']['first_responded_at']).toLocaleTimeString());
+                    // var first_responded_at = (new Date(data[i]['stats']['first_responded_at']).getHours());
+                    var closed_at = (new Date(data[i]['stats']['resolved_at']).toLocaleTimeString());
+                    // var closed_at = (new Date(data[i]['stats']['resolved_at']).getHours());
+                    // console.log('kkkkkkkkkkkk',created_at,first_responded_at,closed_at) c
+
+
+                    const dateOne = data[i]['created_at'];
+
+                    const dateTwo = data[i]['stats']['first_responded_at'];
+                    const dateOneObj = new Date(dateOne);
+                    const dateTwoObj = new Date(dateTwo);
+                    // console.log('dateone', dateOne, dateTwo, dateOneObj, dateTwoObj) c
+
+                    // const milliseconds = Math.abs(dateTwoObj - dateOneObj);
+                    // const hours = milliseconds / 3600;
+                    // const respon = hours / 30;
+                    if (dateOne != null && dateTwo != null) {
+                        // let diffTime = Math.abs(new Date(dateOne) - new Date(dateTwo));
+                        // let days = diffTime / (24 * 60 * 60 * 1000);
+                        // let hours = (days % 1) * 24;
+                        // let minutes = (hours % 1) * 60;
+                        // let secs = (minutes % 1) * 60;
+                        // [days, hours, minutes, secs] = [Math.floor(days), Math.floor(hours), Math.floor(minutes), Math.floor(secs)]
+
+                        // console.log(data[i].id ,'timeeeee'  ,days + 'd', hours + 'h', minutes + 'm', secs + 's');
+
+
+                        const milliseconds = Math.abs(dateTwoObj - dateOneObj);
+                        const hours = Math.round(milliseconds / 36e5);
+                        const time = ((hours / 2));
+                        responsetime.push(time)
+
+                        // console.log('hourssss ', milliseconds, hours); c
+
+
+                    }
+                    else {
+                        responsetime.push(0)
+
+                    }
+
+                    const dOne = data[i]['created_at'];
+                    const dTwo = data[i]['stats']['resolved_at'];
+                    // console.log('done',dOne,dTwo)
+
+
+                    if (dOne != null && dTwo != null) {
+
+                        const dOneObj = new Date(dOne);
+                        const dTwoObj = new Date(dTwo);
+                        // console.log('done', dOne, dTwo, dOneObj, dTwoObj) c
+                        const milliseconds = Math.abs(dTwoObj - dOneObj);
+                        const hours = Math.round(milliseconds / 36e5);
+                        const time = Math.round((hours / 24) * 8)
+
+                        const minu = Math.round(milliseconds / 60000);
+
+                        resolutiontime.push(time)
+
+                        // console.log('resolhourssss ', hours, minu); c
+
+                    }
+                    else {
+                        resolutiontime.push(0)
+                    }
+                    // var high = data[i].priority
+
+                    // console.log('highhhh', high) 
+                    // var created = new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    // var weekAgoDate = new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    // var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                    // // console.log('datesss ', created, weekAgoDate, today); c
+                    // if (created < today && created > weekAgoDate) {
+
+                    //     // console.log('high priority', data[i].status); c
+                    //     openticketslastweek.push(data[i])
+                    // }
+                    if (data[i].priority == 1 || data[i].priority == 4) {
+                        // console.log('status', data[i].priority); c
+                        high.push(data[i])
+                        // console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
+                        var created = new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        var eightweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 56)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                        // console.log('eight week ago')
+                        // console.log('datesss ', created, eightweekAgoDate, today);
+                        if (created < today && created > eightweekAgoDate) {
+                            // console.log('----high created', created); c
+                            highprioritylastweek.push(data[i])
+                        }
+
+                    }
+
+
+                    // console.log('highprioritylastweek', highprioritylastweek,    highprioritylastweek.length) 
                 }
 
+                // var date1 = new Date(data[i]['created_at']).getTime() / 1000;
 
-                // setTableData(optick)
-                // setClosedCount(closedtickets)
-                // setData(closedtickets)
+                // var date2 = new Date(data[i]['stats']['first_responded_at']).getTime() / 1000;
+
+                // var difference = (date2 - date1) / 60 / 60;
 
 
-                // console.log("########################################")
+                // var res = difference / 30
+                // console.log(res, 'difference');
 
-                setData(opentickets);
-                setOpenCount(opentickets.length)
-                setTableData(data);
-                // console.log('open count ',opencount);
-                // var d = parseInt(data.length) - parseInt(opencount)
-                // console.log('closed',d);
-                // setClosedCount(d);
 
-                // setTableData(close)
-                // setOpTick(optick)
+                // console.log('first_responded_at', first_responded_at); c
+                // console.log('created_at', created_at); c
+                // console.log('closed_at', closed_at); c
+
+
+
+                // console.log('openticketslastweek', openticketslastweek) 
+                setOpTickLastWeek(openticketslastweek.length)
+                // console.log('todaytopentickets', todayopentickets) 
+                setTodayOp(todayopentickets.length)
+
+                // console.log('opentickets', opentickets, opentickets.length)
+                // console.log('responsetime', responsetime) 
+                // console.log('resolutiontime', resolutiontime) 
+                // }
                 setAllTick(data)
+                setDays(day)
+                setTickets(tick)
+                setGraph(map1)
+                setData(openticketst);
+                setOpenCount(openticketst.length)
+                setTableData(data);
+                setClosedCount(closedtickets.length)
+                setOpTick(opentickets)
+                const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+                var avg = average(responsetime)
+                // console.log('Average response', avg) 
+                setResTime(avg)
 
-                console.log('Data', data)
+                const resolvetime = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+                var resolve = resolvetime(resolutiontime)
+                // console.log('Average resolutiontime', resolve) 
+                setresoltime(resolve)
+                sethigh(highprioritylastweek.length)
 
-                // console.log('data length', data.length) c
-                for (let i = 0; i < data.length; i++) {
-                    // console.log('fro    ', data[i].id); c
-                    getConversations(data[i].id);
 
-                }
+                setTableDataa(data)
+
+
 
             })
-
-        fetch('https://tmsone.freshdesk.com/api/v2/contacts', {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-                'soNkJKPVmx1hxcr5Q9QT': 'X'
+            .catch((err) => {
+                console.log('Error in include Stats ', err);
             })
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((d) => {
-                // console.log('data2', d); c
 
-                // console.log('data 2 total ', d.length); c
-
-                const map1 = new Map();
-                for (let i = 0; i < d.length; i++) {
-                    //  map1.set(d[i].id, d[i].name);
-                    map1.set(d[i].id, d[i].name);
-                }
-
-                // console.log('map ', map1); c
-                setContacts(map1)
-            })
-            .catch((error) => {
-                console.log('error', error);
-            })
     }, [])
     // console.log('ot', data) c
 
     // console.log('tabledata', tableData); c
 
-    function getConversations(ticketId) {
+    // function getConversations(ticketId) {
 
-        if (ticketId != null) {
-            fetch(`https://tmsone.freshdesk.com/api/v2/tickets/${ticketId}/conversations`, {
-                method: 'GET',
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                    'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-                    'soNkJKPVmx1hxcr5Q9QT': 'X'
-                })
-            })
-                .then((response) => {
-                    return response.json();
+    //     if (ticketId != null) {
+    //         fetch(`https://tmsone.freshdesk.com/api/v2/tickets/${ticketId}/conversations`, {
+    //             method: 'GET',
+    //             headers: new Headers({
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+    //                 'soNkJKPVmx1hxcr5Q9QT': 'X'
+    //             })
+    //         })
+    //             .then((response) => {
+    //                 return response.json();
 
 
-                })
-                .then((result) => {
-                    // console.log('url length', result.length); c
-                    // console.log('url data', result); c
-                    // console.log(result)
-                    const map2 = new Map();
-                    var convArr = [];
-                    for (let i = 0; i < result.length; i++) {
+    //             })
+    //             .then((result) => {
+    //                 // console.log('url length', result.length); c
+    //                 // console.log('url data', result); c
+    //                 // console.log(result)
+    //                 const map2 = new Map();
+    //                 var convArr = [];
+    //                 for (let i = 0; i < result.length; i++) {
 
-                        if (result[i].body_text.includes('https://tmsone')) {
+    //                     if (result[i].body_text.includes('https://tmsone')) {
 
-                            let value = result[i].body_text.split('https://tmsone')
-                            let value1 = value[1].split(" ")
-                            let url = 'https://tmsone' + value1[0]
-                            // console.log(url, "urlllll")    c         //here I am getting only url
-                            // map2.set(ticketId, result[i].body_text);
-                            // map2.set(ticketId, url);
-                            // conversations.set(ticketId, url);
-                            // convArr.push({'ticketId-'+ticketId : url})
-                            if (url != null || url != undefined || url != '') {
-                                //convArr[ticketId] = url;
+    //                         let value = result[i].body_text.split('https://tmsone')
+    //                         let value1 = value[1].split(" ")
+    //                         let url = 'https://tmsone' + value1[0]
+    //                         console.log(url, "urlllll")             //here I am getting only url
+    //                         // map2.set(ticketId, result[i].body_text);
+    //                         // map2.set(ticketId, url);
+    //                         // conversations.set(ticketId, url);
+    //                         // convArr.push({'ticketId-'+ticketId : url})
+    //                         if (url != null || url != undefined || url != '') {
+    //                             //convArr[ticketId] = url;
 
-                                //map2.set(ticketId, url);
-                                //setConversations(new Map(map2));
+    //                             // map2.set(ticketId, url);
+    //                             //setConversations(new Map(map2));
 
-                                updateMap(ticketId, url);
-                            }
+    //                             updateMap(ticketId, url);
+    //                         }
 
-                            // console.log('map2 ',convArr);
-                        }
-                    }
+    //                         // console.log('map2 ',convArr);
+    //                     }
+    //                 }
 
-                    // console.log('map2 ',map2);
+    //                 // console.log('map2 ',map2);
 
-                    // console.log("convArr   ", convArr); c
-                    return convArr;
+    //                 // console.log("convArr   ", convArr); c
+    //                 // return convArr;
 
-                })
-                .then((conv) => {
-                    console.log('connn ', conv); 
-                })
-                .catch((error) => {
-                    console.log('error in getConversations', error);
-                })
-        }
+    //             })
+    //             .then((conv) => {
+    //                 // console.log('connn ', conv); 
+    //             })
+    //             .catch((error) => {
+    //                 console.log('error in getConversations', error);
+    //             })
+    //     }
 
-    }
+    // }
 
     // console.log('conversations ', conversations);
 
@@ -699,12 +987,12 @@ const DataTable = () => {
                 // console.log('open', tableData[i].status); c
                 openticketsArr.push(tableData[i])
             }
-            console.log('opentickets', openticketsArr) 
+            // console.log('opentickets', openticketsArr) 
         }
         // setTableData(optick)
         setData(openticketsArr)
         setOpenCount(openticketsArr.length);
-        console.log('opentickets length', openticketsArr.length) 
+        // console.log('opentickets length', openticketsArr.length) 
 
     }
     function alltickets() {
@@ -738,9 +1026,9 @@ const DataTable = () => {
     // //   var d = Math.floor((Math.abs(updated_at-created_at))/(1000*60*60*24));
     //   setDays(days)
 
-    function DayDiff(created_at, closed_at) {
-        var diff = Date.parse(closed_at) - Date.parse(created_at);
-        var d = isNaN(diff) ? NaN :
+    function DayDiff(created_at, resolved_at) {
+        var diff = Date.parse(resolved_at) - Date.parse(created_at);
+        var d = isNaN(diff) ? '--' :
             // diff : diff,
             // ms : Math.floor( diff            % 1000 ),
             // s  : Math.floor( diff /     1000 %   60 ),
@@ -789,12 +1077,46 @@ const DataTable = () => {
     let navigate = useNavigate();
     const routeChange = () => {
         let path = `high`;
-        navigate(path);
+        navigate(path, { state: { days: days, tableDataa: tableDataa, graph: graph, todayop: todayop, opticklastweek: opticklastweek, high: high, restime: restime, resoltime: resoltime } });
     }
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+
+
+    // useEffect(() => {
+
+    //     if (alltick.length > 0) {
+    //         var pageView = sessionStorage.getItem("item_key");
+
+    //         console.log('in conversation useeffect', pageView, 'json',JSON.stringify(pageView));
+    //             if (pageView == null || pageView.length <= 3) {
+    //                 for (let i = 0; i < alltick.length; i++) {
+    //                     getConversations(alltick[i].id);
+    //                 }
+
+    //                 console.log('alltick', alltick)
+    //                 console.log('conversationsss ', conversations);
+    //                 sessionStorage.setItem("item_key", JSON.stringify(Array.from(conversations.entries())));
+
+    //                 // console.log('conn', pageView)
+    //                 // var obj = JSON.parse(pageView);
+    //                 // console.log('objjj', obj);
+
+    //             }
+    //             else {
+    //                 console.log('pageView  ', JSON.parse(pageView), conversations);
+    //                 // setConversations(JSON.parse(pageView));
+
+    //             }
+
+
+    //     }
+
+    // }, [data])
+
 
     // useEffect(() => {
 
@@ -804,11 +1126,170 @@ const DataTable = () => {
     //         }
     //     }
 
-    // }, [])
+    // }, [data])
+
+
+    useEffect(() => {
+        fetch(`https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%20'2022-01-02'%20AND%20(priority:3%20OR%20priority:4)"`, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                'headers': 'Link',
+                'soNkJKPVmx1hxcr5Q9QT': 'X',
+                'Access-Control-Expose-Headers': '*'
+
+
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((data) => {
+                // console.log('updated', data, data.results.length, data.total)
+
+                var eightweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 56));
+                var sevenweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 49));
+                var sixthweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 42));
+                var fifthweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 35));
+                var fourthweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 28));
+                var thirdweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 21));
+                var secondweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 14));
+                var firstweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 7));
+
+                var today = new Date();
+                var perweek = []
+
+                var highArr = []
+                var eightweek = []
+                var seventhweek = []
+                var sixthweek = []
+                var fifthweek = []
+                var fourthweek = []
+                var thirdweek = []
+                var secondweek = []
+                var firstweek = []
+
+
+                for (let i = 0; i < data.results.length; i++) {
 
 
 
 
+
+                    var created = new Date(data.results[i]['created_at']);
+
+
+
+                    if (data.results[i].priority == 3 || data.results[i].priority == 4) {
+                        // console.log('status', data.results[i].priority);
+                        highArr.push(data.results[i])
+                        if (created >= eightweekAgoDate && created <= sevenweekAgoDate) {
+                            // console.log('----high created', data.results[i]);
+                            eightweek.push(data.results[i])
+
+                            // perweek.push(eightweek.length)
+
+                            // console.log('888'); 
+                            // console.log(created,eightweekAgoDate,sevenweekAgoDate,data.results[i].id); 
+
+                        }
+
+                        else if (created >= sevenweekAgoDate && created <= sixthweekAgoDate) {
+                            seventhweek.push(data.results[i])
+
+                            // console.log('777'); 
+                            // console.log(created,sevenweekAgoDate,sixthweekAgoDate,data.results[i].id); 
+
+                        }
+                        else if (created >= sixthweekAgoDate && created <= fifthweekAgoDate) {
+                            sixthweek.push(data.results[i])
+
+                            // console.log('666');
+                            // console.log(created,sixthweekAgoDate,fifthweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= fifthweekAgoDate && created <= fourthweekAgoDate) {
+                            fifthweek.push(data.results[i])
+
+                            // console.log('555');
+                            // console.log(created,fifthweekAgoDate,fourthweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= fourthweekAgoDate && created <= thirdweekAgoDate) {
+                            fourthweek.push(data.results[i])
+
+                            // console.log('444');
+                            // console.log(created,fourthweekAgoDate,thirdweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= thirdweekAgoDate && created <= secondweekAgoDate) {
+                            thirdweek.push(data.results[i])
+
+                            // console.log('333');
+                            // console.log(created,thirdweekAgoDate,secondweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= secondweekAgoDate && created <= firstweekAgoDate) {
+                            secondweek.push(data.results[i])
+
+                            // console.log('222');
+                            // console.log(created,secondweekAgoDate,firstweekAgoDate,data.results[i].id);
+
+                        }
+                        else if (created >= firstweekAgoDate && created <= today) {
+                            firstweek.push(data.results[i])
+
+                            // console.log('111');
+                            // console.log(created,firstweekAgoDate,today,data.results[i].id);
+
+                        }
+
+                    }
+
+                }
+                perweek.push(firstweek.length)
+                perweek.push(secondweek.length)
+                perweek.push(thirdweek.length)
+                perweek.push(fourthweek.length)
+                perweek.push(fifthweek.length)
+                perweek.push(sixthweek.length)
+                perweek.push(seventhweek.length)
+
+                perweek.push(eightweek.length)
+
+
+
+
+
+                sethigh(perweek)
+
+
+
+                // // console.log('Dates', created, eightweekAgoDate, sevenweekAgoDate, sixthweekAgoDate, fifthweekAgoDate, fourthweekAgoDate, thirdweekAgoDate, secondweekAgoDate, firstweekAgoDate, today);
+                // console.log('high array', high);
+                // // // console.log('highprio array', highprio);
+                // console.log('weekly data',perweek);
+                // console.log(firstweek.length,secondweek.length,thirdweek.length,fourthweek.length, fifthweek.length,sixthweek.length, seventhweek.length, eightweek.length);
+
+            })
+
+
+
+
+
+
+
+
+
+    }, [data])
+
+
+
+    const Redirect = () => {
+        let path = `/noconv`;
+        navigate(path);
+    }
 
 
     return (
