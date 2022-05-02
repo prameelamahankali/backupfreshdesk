@@ -234,7 +234,7 @@ const DataTable = () => {
                     }
                 };
 
-                return <button style={{ justifyContent: 'flex-start' }} onClick={onClick}>{params.value}</button>;
+                return <Button style={{ justifyContent: 'flex-start' }} onClick={onClick}>{params.value}</Button>;
             },
         },
         {
@@ -1290,6 +1290,114 @@ const DataTable = () => {
         let path = `/noconv`;
         navigate(path);
     }
+    useEffect(() => {
+        const options = {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                'soNkJKPVmx1hxcr5Q9QT': 'X'
+            })
+        };
+        // {opentickets}
+
+
+        // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
+        //     method: 'GET',
+        //     headers: new Headers({
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+        //         'soNkJKPVmx1hxcr5Q9QT': 'X'
+        //     })
+        // })
+        //     .then((response) => {
+        //         // console.log('response ', response.json());
+        //         return response.json();
+        //     })
+        //     .then((open) => {
+        //         // console.log('data1', open); c
+        //         // console.log('total tickets', open.total); c
+        //         // setData(open.results);
+
+        //         for (let i = 0; i < open.total; i++) {
+        //             // console.log('---------------', open.results[i]); c
+
+
+        //             open.results[i]['diff'] = DayDiff(open.results[i]['created_at'], open.results[i]['updated_at'])
+
+        //             if (open.results[i]['status'] === 2) {
+        //                 open.results[i]['status'] = 'Open';
+        //             }
+        //             if (open.results[i]['status'] === 3) {
+        //                 open.results[i]['status'] = 'Pending';
+        //             }
+        //             if (open.results[i]['status'] === 4) {
+        //                 open.results[i]['status'] = 'Resolved';
+        //             }
+        //             if (open.results[i]['status'] === 5) {
+        //                 open.results[i]['status'] = 'Closed';
+        //             }
+        //             if (open.results[i]['status'] === 6) {
+        //                 open.results[i]['status'] = 'Waiting on Customer';
+        //             }
+        //             if (open.results[i]['status'] === 7) {
+        //                 open.results[i]['status'] = 'Waiting on Third Party';
+        //             }
+        //         }
+        //         for (let i = 0; i < open.total; i++) {
+        //             // console.log('data0', open.results[i]); c
+        //             if (open.results[i]['priority'] === 1) {
+        //                 open.results[i]['priority'] = 'Low';
+        //             }
+        //             if (open.results[i]['priority'] === 2) {
+        //                 open.results[i]['priority'] = 'Medium';
+        //             }
+        //             if (open.results[i]['priority'] === 3) {
+        //                 open.results[i]['priority'] = 'High';
+        //             }
+        //             if (open.results[i]['priority'] === 4) {
+        //                 open.results[i]['priority'] = 'Urgrnt';
+        //             }
+        //         }
+        //         setData(open.results);
+        //         setOpenCount(open.results.length);
+
+
+        //     })
+        //     .catch((err) => {
+        //         console.log('err in api call Main ', err);
+        //     })
+
+
+        // fetch('https://tmsone.freshdesk.com/api/v2/contacts', {
+        //     method: 'GET',
+        //     headers: new Headers({
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+        //         'soNkJKPVmx1hxcr5Q9QT': 'X'
+        //     })
+        // })
+        //     .then((response) => {
+        //         return response.json();
+        //     })
+        //     .then((d) => {
+        //         // console.log('data2', d); c
+
+        //         // console.log('data 2 total ', d.length); c
+
+        //         const map1 = new Map();
+        //         for (let i = 0; i < d.length; i++) {
+        //             //  map1.set(d[i].id, d[i].name);
+        //             map1.set(d[i].id, d[i].name);
+        //         }
+
+        //         // console.log('map ', map1); c
+        //         setContacts(map1)
+        //     })
+        //     .catch((error) => {
+        //         console.log('error in contacts', error);
+        //     })
+    }, [])
 
 
     return (
