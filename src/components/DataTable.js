@@ -152,6 +152,7 @@ const DataTable = () => {
     const [resoltime, setresoltime] = useState(0)
     const [high, sethigh] = useState([])
     const [tableDataa, setTableDataa] = useState([])
+    const [yearago, setYearAgo] = useState(0)
 
 
 
@@ -448,11 +449,6 @@ const DataTable = () => {
             .then((data) => {
 
 
-                // Access value associated with the key
-                var item_value = sessionStorage.getItem("item_key");
-
-                // Assign value to a key
-
                 // var open = []
                 const map1 = new Map();
                 var day = []
@@ -651,12 +647,12 @@ const DataTable = () => {
                         // console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
                         // if (new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }) == new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })) {
 
-                            // console.log('opentoday', data[i]['created_at']) 
-                            todayopentickets.push(data[i])
-                            // if ((new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' })<new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' })){
-                            //     console.log('cretaed', data[i]['created_at'])
+                        // console.log('opentoday', data[i]['created_at']) 
+                        todayopentickets.push(data[i])
+                        // if ((new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' })<new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' })){
+                        //     console.log('cretaed', data[i]['created_at'])
 
-                            // }
+                        // }
                         // }
                     }
 
@@ -1290,123 +1286,72 @@ const DataTable = () => {
         let path = `/noconv`;
         navigate(path);
     }
+
+
     useEffect(() => {
-        const options = {
+
+
+        var oneyearago = new Date(new Date().setFullYear(new Date().getFullYear() - 3)).toLocaleDateString('en-CA', { timeZone: 'UTC' });
+
+        console.log('oneyearago', oneyearago)
+        // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%272021-01-01%27%20"', {
+        // fetch(`https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%27${oneyearago}%27%20"`, {
+        fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%272020-10-15%27%20"', {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json',
                 'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
                 'soNkJKPVmx1hxcr5Q9QT': 'X'
             })
-        };
-        // {opentickets}
+        })
+            .then((response) => {
+                // console.log('response ', response.json());
+                return response.json();
+            })
+            .then((All) => {
+                console.log('Allll', All, All.results.length, All.total)
+
+                // var pastoneyeartickets = []
+                // for (let i = 0; i < All.results.length; i++) {
+                //     var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //     var oneyearago = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //     var created = new Date(All.results[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //     if (created < today && created > oneyearago) {
+                //         // console.log('dates open', created); c
+                //         pastoneyeartickets.push(All.results[i])
+                //     }
+                //     //    console.log(created,today,oneyearago);
+
+                // }
+
+                // console.log(today,oneyearago,created);
+                // console.log('pastoneyeartickets',pastoneyeartickets);
+                setYearAgo(All)
+                console.log(All.total, 'kkkkk')
 
 
-        // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="status:2"', {
-        //     method: 'GET',
-        //     headers: new Headers({
-        //         'Content-Type': 'application/json',
-        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-        //         'soNkJKPVmx1hxcr5Q9QT': 'X'
-        //     })
-        // })
-        //     .then((response) => {
-        //         // console.log('response ', response.json());
-        //         return response.json();
-        //     })
-        //     .then((open) => {
-        //         // console.log('data1', open); c
-        //         // console.log('total tickets', open.total); c
-        //         // setData(open.results);
 
-        //         for (let i = 0; i < open.total; i++) {
-        //             // console.log('---------------', open.results[i]); c
+            })
+            .catch((err) => {
+                console.log('err in api call Main All Tickets ', err);
+            })
 
 
-        //             open.results[i]['diff'] = DayDiff(open.results[i]['created_at'], open.results[i]['updated_at'])
 
-        //             if (open.results[i]['status'] === 2) {
-        //                 open.results[i]['status'] = 'Open';
-        //             }
-        //             if (open.results[i]['status'] === 3) {
-        //                 open.results[i]['status'] = 'Pending';
-        //             }
-        //             if (open.results[i]['status'] === 4) {
-        //                 open.results[i]['status'] = 'Resolved';
-        //             }
-        //             if (open.results[i]['status'] === 5) {
-        //                 open.results[i]['status'] = 'Closed';
-        //             }
-        //             if (open.results[i]['status'] === 6) {
-        //                 open.results[i]['status'] = 'Waiting on Customer';
-        //             }
-        //             if (open.results[i]['status'] === 7) {
-        //                 open.results[i]['status'] = 'Waiting on Third Party';
-        //             }
-        //         }
-        //         for (let i = 0; i < open.total; i++) {
-        //             // console.log('data0', open.results[i]); c
-        //             if (open.results[i]['priority'] === 1) {
-        //                 open.results[i]['priority'] = 'Low';
-        //             }
-        //             if (open.results[i]['priority'] === 2) {
-        //                 open.results[i]['priority'] = 'Medium';
-        //             }
-        //             if (open.results[i]['priority'] === 3) {
-        //                 open.results[i]['priority'] = 'High';
-        //             }
-        //             if (open.results[i]['priority'] === 4) {
-        //                 open.results[i]['priority'] = 'Urgrnt';
-        //             }
-        //         }
-        //         setData(open.results);
-        //         setOpenCount(open.results.length);
-
-
-        //     })
-        //     .catch((err) => {
-        //         console.log('err in api call Main ', err);
-        //     })
-
-
-        // fetch('https://tmsone.freshdesk.com/api/v2/contacts', {
-        //     method: 'GET',
-        //     headers: new Headers({
-        //         'Content-Type': 'application/json',
-        //         'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
-        //         'soNkJKPVmx1hxcr5Q9QT': 'X'
-        //     })
-        // })
-        //     .then((response) => {
-        //         return response.json();
-        //     })
-        //     .then((d) => {
-        //         // console.log('data2', d); c
-
-        //         // console.log('data 2 total ', d.length); c
-
-        //         const map1 = new Map();
-        //         for (let i = 0; i < d.length; i++) {
-        //             //  map1.set(d[i].id, d[i].name);
-        //             map1.set(d[i].id, d[i].name);
-        //         }
-
-        //         // console.log('map ', map1); c
-        //         setContacts(map1)
-        //     })
-        //     .catch((error) => {
-        //         console.log('error in contacts', error);
-        //     })
     }, [])
-
 
     return (
         // <div style={{ borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)',height: 700, width: '97%',padding:'10px'}}>
         <div style={{ height: 700, padding: '10px' }} >
             {/* // <div style={{borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)', width: '97%', padding: '1rem'}}> */}
-            {/* <h1 style={{'textAlign':'right', width: '97%'}}>{tableData.length > 0 ? <div>Tickets : <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
+
+
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 3rem' }}>
                 <img src={pic} alt="DNOW" width="100" height="40" />
+
+                <div style={{ display: 'flex', width: '100%', justifyContent: 'right', alignItems: 'end' }}>{yearago.total > 0 ? <div>Overall : <span>{yearago.total}</span></div> : 'No Records Found'}</div>
+
+
                 <div>
 
 
@@ -1433,12 +1378,23 @@ const DataTable = () => {
                 </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+
                 {/* <TimelineRoundedIcon fontSize='large'></TimelineRoundedIcon> */}
                 {/* <Button className='one' onClick={routeChange}>Graph</Button>
 
                 <Button  className='two' onClick={opentickets}>Open:  <div> {opencount} </div> </Button>
                 <Button  className= 'three' onClick={closedtickets}>Closed:  <div> {closedcount}  </div></Button>
                 <Button  className='two' onClick={alltickets}>All:  <div> {tableData.length} </div></Button>  */}
+                {/* <Tab
+                    // value='two'
+                    // onClick={routeChange}
+                    label={'YearAgo Tickets:' + yearago.total}
+                // label = "📈"
+
+
+
+                /> */}
+
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -1449,6 +1405,7 @@ const DataTable = () => {
                 // textColor="primary"
                 // centered
                 >
+
                     <Tab
                         value='two'
                         onClick={routeChange}
