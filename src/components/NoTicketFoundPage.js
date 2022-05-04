@@ -1,9 +1,8 @@
-
 import {Button} from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
 
-function NoConvPage() {
+function NoTicketFoundPage() {
   let navigate = useNavigate();
   const Home = () => {
     let path = `/`;
@@ -11,7 +10,7 @@ function NoConvPage() {
   }
   return (
     <div className="App">
-        <h1> NO CONVERSATIONS FOUND</h1>
+        <h1>TICKET NOT FOUND</h1>
 
         <Button onClick={Home}>Go To Home Page</Button>
 
@@ -19,4 +18,4 @@ function NoConvPage() {
   );
 }
 
-export default NoConvPage;
+export default NoTicketFoundPage;

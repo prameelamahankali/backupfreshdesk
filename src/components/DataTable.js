@@ -30,6 +30,8 @@ import CardContent from '@mui/material/CardContent';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { GridPanelHeader } from '@mui/x-data-grid';
 import { Redirect } from 'react-router-dom'
+import SearchIcon from '@mui/icons-material/Search';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { useNavigate } from "react-router-dom";
 // import { fontSize } from '@mui/system';
 
@@ -153,6 +155,7 @@ const DataTable = () => {
     const [high, sethigh] = useState([])
     const [tableDataa, setTableDataa] = useState([])
     const [yearago, setYearAgo] = useState(0)
+    const [search, setSearch] = useState([])
 
 
 
@@ -258,7 +261,7 @@ const DataTable = () => {
         },
 
         {
-            field: 'subject', headerName: 'SUBJECT', flex: 3, 'filterable': false,
+            field: 'subject', headerName: 'SUBJECT', flex: 2.5, 'filterable': false,
             renderCell: (params) => (
                 <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-line', textAlign: 'justify' }}>
                     {params.value}
@@ -267,9 +270,9 @@ const DataTable = () => {
         },
 
         {
-            field: 'requester.name', headerName: 'CREATED BY', flex: 1, 'filterable': false,
+            field: 'requester.name', headerName: 'CREATED BY', flex: 1.15, 'filterable': false,
             renderCell: (params) => (
-                <div>
+                <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-line', textAlign: 'justify' }}>
                     {/* {contacts.get(params.value)} */}
                     {params.row.requester.name != null ? <td>{params.row.requester.name}</td> : <td>{'DNOW Contact'}</td>}
                 </div>
@@ -314,6 +317,16 @@ const DataTable = () => {
         {
             field: 'diff', headerName: 'DURATION (Days)', flex: 1,
             'filterable': false,
+
+        },
+        {
+            field: 'type', headerName: 'TYPE OF ISSUE', flex: 1,
+            'filterable': false,
+            renderCell: (params) => (
+                <div>{params.value != null ? <td>{params.value}</td> : <td>{'--'}</td>}</div>
+
+            ),
+
 
         },
 
@@ -1286,6 +1299,12 @@ const DataTable = () => {
         let path = `/noconv`;
         navigate(path);
     }
+    const NoTicket = () => {
+        let path = `/noticket`;
+        navigate(path);
+    }
+
+
 
 
     useEffect(() => {
@@ -1293,7 +1312,7 @@ const DataTable = () => {
 
         var oneyearago = new Date(new Date().setFullYear(new Date().getFullYear() - 3)).toLocaleDateString('en-CA', { timeZone: 'UTC' });
 
-        console.log('oneyearago', oneyearago)
+        // console.log('oneyearago', oneyearago)
         // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%272021-01-01%27%20"', {
         // fetch(`https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%27${oneyearago}%27%20"`, {
         fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%272020-10-15%27%20"', {
@@ -1309,7 +1328,7 @@ const DataTable = () => {
                 return response.json();
             })
             .then((All) => {
-                console.log('Allll', All, All.results.length, All.total)
+                // console.log('Allll', All, All.results.length, All.total)
 
                 // var pastoneyeartickets = []
                 // for (let i = 0; i < All.results.length; i++) {
@@ -1327,7 +1346,7 @@ const DataTable = () => {
                 // console.log(today,oneyearago,created);
                 // console.log('pastoneyeartickets',pastoneyeartickets);
                 setYearAgo(All)
-                console.log(All.total, 'kkkkk')
+                // console.log(All.total, 'kkkkk')
 
 
 
@@ -1340,6 +1359,152 @@ const DataTable = () => {
 
     }, [])
 
+    //  function getAllTickets() {
+
+    //     // if (ticketId != null) {
+    //         fetch(`https://tmsone.freshdesk.com/api/v2/tickets/${search}`, {
+    //             // fetch(`https://tmsone.freshdesk.com/api/v2/tickets/346`, {
+    //             method: 'GET',
+    //             headers: new Headers({
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+    //                 'soNkJKPVmx1hxcr5Q9QT': 'X'
+    //             })
+    //         })
+    //             .then((response) => {
+    //                 return response.json();
+
+
+    //             })
+    //             .then((result) => {
+    //                 console.log(result)
+    //             //    setSearch(result)
+
+
+    //             })
+
+    //             .catch((error) => {
+    //                 console.log('error in getAllTickets', error);
+    //             })
+
+
+    //     // }
+
+    // }
+
+    function getConversationsOnid() {
+
+        // if (ticketId != null) {
+        fetch(`https://tmsone.freshdesk.com/api/v2/tickets/${search}/conversations`, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                'soNkJKPVmx1hxcr5Q9QT': 'X'
+            })
+        })
+            .then((response) => {
+                // console.log(response);
+                if (search == '' || search == null) {
+                    alert('Please Enter Ticket id')
+                }
+
+                else if (response.status == 404) {
+                    return NoTicket();
+                }
+                else {
+                    return response.json();
+                }
+
+
+
+            })
+            .then((result) => {
+                // console.log('url length', result.length); c
+                // console.log('url data', result); c
+                // console.log(result,)
+                if (result.length > 0) {
+                    const map2 = new Map();
+                    var convArr = [];
+                    var redirectFlag = true;
+                    for (let i = 0; i < result.length; i++) {
+
+                        if (result[i].body_text.includes('https://tmsone')) {
+                            redirectFlag = false;
+                            let value = result[i].body_text.split('https://tmsone')
+                            let value1 = value[1].split(" ")
+                            let url = 'https://tmsone' + value1[0]
+                            // console.log(url, "urlllll")             //here I am getting only url
+                            // map2.set(ticketId, result[i].body_text);
+                            // map2.set(ticketId, url);
+                            // conversations.set(ticketId, url);
+                            // convArr.push({'ticketId-'+ticketId : url})
+                            // console.log('urle ', url, value);
+                            // console.log('value', value);
+                            if (url != null || url != undefined || url != '') {
+                                //convArr[ticketId] = url;
+
+                                // map2.set(ticketId, url);
+                                //setConversations(new Map(map2));
+
+                                // updateMap(ticketId, url);
+
+                                window.open(url, '_blank');
+                            }
+                            // else {
+                            //     Redirect();
+
+                            // }
+
+
+
+                            // console.log('map2 ',convArr);
+                        }
+                        // else {
+                        //     Redirect();
+
+                        // }
+
+
+                    }
+
+                    if (redirectFlag) {
+                        Redirect();
+                    }
+                }
+                else {
+                    Redirect();
+
+                }
+
+                // console.log('map2 ',map2);
+
+                // console.log("convArr   ", convArr); c
+                // return convArr;
+
+            })
+            .catch((error) => {
+                console.log('error in getConversations', error);
+            })
+    }
+
+
+
+    // console.log('conversations ', conversations);
+
+    const handleSubmit = e => {
+        // e.preventDefault();
+        getConversationsOnid()
+    };
+
+    const handleKeypress = e => {
+        //it triggers by pressing the enter key
+        // console.log('key press ', e.keyCode, e.key);
+        if (e.key === 'Enter') {
+            // setSearch(e.target.value)
+            handleSubmit();
+        }
+    };
     return (
         // <div style={{ borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)',height: 700, width: '97%',padding:'10px'}}>
         <div style={{ height: 700, padding: '10px' }} >
@@ -1349,22 +1514,36 @@ const DataTable = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 3rem' }}>
                 <img src={pic} alt="DNOW" width="100" height="40" />
 
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'right', alignItems: 'end' }}>{yearago.total > 0 ? <div>Overall : <span>{yearago.total}</span></div> : 'No Records Found'}</div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', width: '100%', height: '15px', justifyContent: 'right', alignItems: 'end', padding: '12px' }}>{yearago.total > 0 ? <div>Overall : <span>{yearago.total}</span></div> : 'No Records Found'}</div>
+                    <input
+                        style={{ display: 'flex', height: '10px', justifyContent: 'right', alignItems: 'end', padding: '12px' }}
+                        type="text"
+                        // placeholder=   '&#xF002;'
+                        placeholder='Enter id...'
+                        // style="font-family:Arial, FontAwesome"
+                        value={search}
+                        // onClick={() => getAllTickets}
+                        onChange={(e) => setSearch(e.target.value)}
+                        onKeyPress={(e) => handleKeypress(e)}
 
 
-                <div>
+                    />
 
 
-                    {/* <button class="custButton" onClick={routeChange}> */}
+                    <div>
 
-                    {/* </button> */}
+                        <Button style={{ display: 'flex', width: '99%', justifyContent: 'right', alignItems: 'end', padding: '12px' }} onClick={(e) => handleSubmit(e)}  > Search </Button>
+                        {/* <button class="custButton" onClick={routeChange}> */}
 
-                    {/* <Redirect to="/HighCharts" /> */}
-                    {/* <AnalyticsIcon onClick={window.Navigator}></AnalyticsIcon> */}
-                    {/* <IconButton aria-label="fingerprint" color="secondary">
+                        {/* </button> */}
+
+                        {/* <Redirect to="/HighCharts" /> */}
+                        {/* <AnalyticsIcon onClick={window.Navigator}></AnalyticsIcon> */}
+                        {/* <IconButton aria-label="fingerprint" color="secondary">
                         <StepIcon />
                     </IconButton> */}
-                    {/* <Modal
+                        {/* <Modal
                         open={open}
                         onClose={handleClose}
                         aria-labelledby="modal-modal-title"
@@ -1375,7 +1554,9 @@ const DataTable = () => {
                         </Box>
                     </Modal> */}
 
+                    </div>
                 </div>
+
             </div>
             <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
 

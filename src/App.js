@@ -6,7 +6,7 @@ import MyChart from './components/MyChart';
 import ReChart from './components/ReChart';
 import HighCharts from './components/HighCharts';
 import NoConvPage from './components/NoConvPage';
-
+import NoTicketFoundPage from './components/NoTicketFoundPage';
 import { Routes, Route } from 'react-router-dom';
 // const cors = require("cors");
 // DataTable.use(cors());
@@ -18,6 +18,7 @@ function App() {
         <Route path='/' element={<DataTable/>}/>
         <Route path='/high' element={<HighCharts/>}/>
         <Route path='/noconv' element={<NoConvPage/>}/>
+        <Route path='/noticket' element={<NoTicketFoundPage/>}/>
       </Routes>
       
       {/* <MyChart/> */}
