@@ -162,6 +162,7 @@ const DataTable = () => {
     const columns = [
         {
             field: 'id', headerName: 'ID', flex: 0.5,
+            //  headerAlign: 'center',
             // renderCell: (params) => (
             //     <div>
             //         {/* {conversations.get(params.value) != null ? <div><a href={conversations.get(params.value)} target="_blank"><span>{params.value}</span></a></div> : <div>{params.value}</div>} */}
@@ -238,7 +239,7 @@ const DataTable = () => {
                     }
                 };
 
-                return <Button style={{ justifyContent: 'flex-start' }} onClick={onClick}>{params.value}</Button>;
+                return <Button style={{ justifyContent: 'left',padding:'1px' }} onClick={onClick}>{params.value}</Button>;
             },
         },
         {
@@ -267,6 +268,16 @@ const DataTable = () => {
                     {params.value}
                 </div>
             ),
+        },
+        {
+            field: 'type', headerName: 'TYPE', flex: 1,
+            'filterable': false,
+            renderCell: (params) => (
+                <div>{params.value != null ? <td>{params.value}</td> : <td>{'--'}</td>}</div>
+
+            ),
+
+
         },
 
         {
@@ -314,21 +325,12 @@ const DataTable = () => {
             ),
         },
 
-        {
-            field: 'diff', headerName: 'DURATION (Days)', flex: 1,
-            'filterable': false,
+        // {
+        //     field: 'diff', headerName: 'DURATION (Days)', flex: 1,
+        //     'filterable': false,
 
-        },
-        {
-            field: 'type', headerName: 'TYPE OF ISSUE', flex: 1,
-            'filterable': false,
-            renderCell: (params) => (
-                <div>{params.value != null ? <td>{params.value}</td> : <td>{'--'}</td>}</div>
-
-            ),
-
-
-        },
+        // },
+        
 
 
 
@@ -1406,7 +1408,7 @@ const DataTable = () => {
             .then((response) => {
                 // console.log(response);
                 if (search == '' || search == null) {
-                    alert('Please Enter Ticket id')
+                    alert('Please Enter Ticket ID')
                 }
 
                 else if (response.status == 404) {
@@ -1517,10 +1519,10 @@ const DataTable = () => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ display: 'flex', width: '100%', height: '15px', justifyContent: 'right', alignItems: 'end', padding: '12px' }}>{yearago.total > 0 ? <div>Overall : <span>{yearago.total}</span></div> : 'No Records Found'}</div>
                     <input
-                        style={{ display: 'flex', height: '10px', justifyContent: 'right', alignItems: 'end', padding: '12px' }}
+                        style={{ display: 'flex', height: '10px', justifyContent: 'right', alignItems: 'end', padding: '8px' }}
                         type="text"
                         // placeholder=   '&#xF002;'
-                        placeholder='Enter id...'
+                        placeholder='Enter Ticket ID'
                         // style="font-family:Arial, FontAwesome"
                         value={search}
                         // onClick={() => getAllTickets}
@@ -1533,7 +1535,7 @@ const DataTable = () => {
 
                     <div>
 
-                        <Button style={{ display: 'flex', width: '99%', justifyContent: 'right', alignItems: 'end', padding: '12px' }} onClick={(e) => handleSubmit(e)}  > Search </Button>
+                        <Button style={{ display: 'flex', width: '90%', justifyContent: 'left', alignItems: 'end', padding: '4px' }} onClick={(e) => handleSubmit(e)}  > <SearchIcon></SearchIcon> </Button>
                         {/* <button class="custButton" onClick={routeChange}> */}
 
                         {/* </button> */}
