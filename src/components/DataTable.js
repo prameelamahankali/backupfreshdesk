@@ -858,6 +858,7 @@ const DataTable = () => {
 
 
                 setTableDataa(data)
+                setData(contacts)
 
 
 
@@ -1555,7 +1556,7 @@ const DataTable = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 3rem' }}>
                 <img src={pic} alt="DNOW" width="100" height="40" />
 
-                <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: 'flex',justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', width: '100%', height: '15px', justifyContent: 'right', alignItems: 'end', padding: '12px' }}>{yearago.total > 0 ? <div>Overall : <span>{yearago.total}</span></div> : 'No Records Found'}</div>
                     <input
                         style={{ display: 'flex', height: '10px', justifyContent: 'right', alignItems: 'end', padding: '8px' }}

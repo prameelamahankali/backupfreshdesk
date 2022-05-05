@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official';
 import pic from "../left.png";
-
+import pica from "../DNOWLogo.png";
 import { Box, Button, Grid, Item, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 // import CardActions from '@mui/material/CardActions';
@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 // import { fontSize } from '@mui/system';
 
 import { useLocation } from 'react-router-dom';
+import { height } from '@mui/system';
 
 
 
@@ -79,7 +80,8 @@ const HighCharts = () => {
             {
                 data: location.state.days,
                 name: 'Days'
-            }
+            },
+
         ]
     };
 
@@ -108,7 +110,7 @@ const HighCharts = () => {
             {
                 data: location.state.high,
                 name: 'High and Urgent'
-            }
+            },
         ]
     };
 
@@ -252,7 +254,7 @@ const HighCharts = () => {
     //                     const milliseconds = Math.abs(dTwoObj - dOneObj);
     //                     const hours = Math.round(milliseconds / 36e5);
     //                     const time =  Math.round((hours / 24)*8)
-                         
+
     //                     const minu = Math.round(milliseconds / 60000);
 
     //                     resolutiontime.push(time)
@@ -403,7 +405,7 @@ const HighCharts = () => {
     //         // m  : Math.floor( diff /    60000 %   60 ),
     //         // h  : Math.floor( diff /  3600000 %   24 ),
     //          Math.floor(diff / 86400000)
-           
+
     //     console.log('diff', d)
     //     return d
     // }
@@ -679,84 +681,90 @@ const HighCharts = () => {
 
         // console.log('location  ', location);
 
-    },[])
+    }, [])
 
     return (
-        <><Button style={{ display: 'flex', fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
-            <div style={{ margin: '2rem' }}>
+        <>
+            <div style={{ height: 140, padding: '10px' }}>
+                <Button style={{ display: 'flex', fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
+                <div style={{ display: 'flex', justifyContent: 'end', margin: '0rem 2rem' }}>
+                    <img src={pica} alt="DNOW" width="100" height="40" />
+                </div>
+                <div style={{ margin: '2rem' }}>
 
-                <Grid container spacing={2}>
-                    <Grid xs={12} md={12}>
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <HighchartsReact highcharts={Highcharts} options={options} />
-                        </div>
-                    </Grid>
-                    <Grid item xs={8} md={6}>
-                        <div>
-                            {/* <HighchartsReact highcharts={Highcharts} options={options} /> */}
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        {location.state.todayop}
+                    <Grid container spacing={2}>
+                        <Grid xs={12} md={12}>
+                            <div style={{ display: 'flex',padding: '10px', width: '1200px', height: 370 }}>
+                                <HighchartsReact  highcharts={Highcharts} options={options} />
+                                <HighchartsReact  highcharts={Highcharts} options={highprio} />
+                            </div>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <div>
+                                {/* <HighchartsReact highcharts={Highcharts} options={options} /> */}
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <Typography variant="h5" component="div">
+                                            {location.state.todayop}
 
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        Open Tickets (Till Date)
-                                    </Typography>
-                                </CardContent>
+                                        </Typography>
+                                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                            Open Tickets (Till Date)
+                                        </Typography>
+                                    </CardContent>
 
-                            </Card>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <div>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        {location.state.opticklastweek}
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        Open Tickets (Last Week)
-                                    </Typography>
+                                </Card>
+                            </div>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <div>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <Typography variant="h5" component="div">
+                                            {location.state.opticklastweek}
+                                        </Typography>
+                                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                            Open Tickets (Last Week)
+                                        </Typography>
 
-                                </CardContent>
+                                    </CardContent>
 
-                            </Card>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <div>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        {location.state.restime.toFixed(2)} <AccessTimeIcon></AccessTimeIcon>
-                                        {/* {location.state.restime} <AccessTimeIcon></AccessTimeIcon> */}
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        Average Response Time (Hour)
-                                    </Typography>
-                                </CardContent>
+                                </Card>
+                            </div>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <div>
+                                <Card variant="outlined">
+                                    <CardContent>
+                                        <Typography variant="h5" component="div">
+                                            {location.state.restime.toFixed(2)} <AccessTimeIcon></AccessTimeIcon>
+                                            {/* {location.state.restime} <AccessTimeIcon></AccessTimeIcon> */}
+                                        </Typography>
+                                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                            Average Response Time (Hour)
+                                        </Typography>
+                                    </CardContent>
 
-                            </Card>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <div>
-                            <Card variant="outlined">
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        {location.state.resoltime.toFixed(2)} <AccessTimeIcon></AccessTimeIcon>
-                                        {/* {location.state.resoltime} <AccessTimeIcon></AccessTimeIcon> */}
-                                    </Typography>
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        Average Resolution Time (Hour)
-                                    </Typography>
-                                </CardContent>
+                                </Card>
+                            </div>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <div>
+                                <Card variant="outlined" >
+                                    <CardContent>
+                                        <Typography variant="h5" component="div">
+                                            {location.state.resoltime.toFixed(2)} <AccessTimeIcon></AccessTimeIcon>
+                                            {/* {location.state.resoltime} <AccessTimeIcon></AccessTimeIcon> */}
+                                        </Typography>
+                                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                            Average Resolution Time (Hour)
+                                        </Typography>
+                                    </CardContent>
 
-                            </Card>
-                        </div>
-                    </Grid>
-                    {/* <Grid item xs={12} md={6}>
+                                </Card>
+                            </div>
+                        </Grid>
+                        {/* <Grid item xs={12} md={6}>
                     <div >
                         <Card variant="outlined">
                             <CardContent>
@@ -773,15 +781,15 @@ const HighCharts = () => {
                 </Grid> */}
 
 
-                    <Grid xs={12} md={12}>
+                        {/* <Grid xs={12} md={12}>
                         <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
                             <HighchartsReact highcharts={Highcharts} options={highprio} />
                         </div>
+                    </Grid> */}
                     </Grid>
-                </Grid>
+                </div>
+
             </div>
-
-
 
         </>
     )
