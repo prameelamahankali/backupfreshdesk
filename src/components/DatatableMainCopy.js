@@ -30,6 +30,8 @@ import CardContent from '@mui/material/CardContent';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { GridPanelHeader } from '@mui/x-data-grid';
 import { Redirect } from 'react-router-dom'
+import SearchIcon from '@mui/icons-material/Search';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { useNavigate } from "react-router-dom";
 // import { fontSize } from '@mui/system';
 
@@ -152,12 +154,15 @@ const DataTable = () => {
     const [resoltime, setresoltime] = useState(0)
     const [high, sethigh] = useState([])
     const [tableDataa, setTableDataa] = useState([])
+    const [yearago, setYearAgo] = useState(0)
+    const [search, setSearch] = useState([])
 
 
 
     const columns = [
         {
             field: 'id', headerName: 'ID', flex: 0.5,
+            //  headerAlign: 'center',
             // renderCell: (params) => (
             //     <div>
             //         {/* {conversations.get(params.value) != null ? <div><a href={conversations.get(params.value)} target="_blank"><span>{params.value}</span></a></div> : <div>{params.value}</div>} */}
@@ -234,7 +239,7 @@ const DataTable = () => {
                     }
                 };
 
-                return <button style={{ justifyContent: 'flex-start' }} onClick={onClick}>{params.value}</button>;
+                return <Button style={{ justifyContent: 'left',padding:'1px' }} onClick={onClick}>{params.value}</Button>;
             },
         },
         {
@@ -257,18 +262,28 @@ const DataTable = () => {
         },
 
         {
-            field: 'subject', headerName: 'SUBJECT', flex: 3, 'filterable': false,
+            field: 'subject', headerName: 'SUBJECT', flex: 2.5, 'filterable': false,
             renderCell: (params) => (
                 <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-line', textAlign: 'justify' }}>
                     {params.value}
                 </div>
             ),
         },
+        {
+            field: 'type', headerName: 'TYPE', flex: 1,
+            'filterable': false,
+            renderCell: (params) => (
+                <div>{params.value != null ? <td>{params.value}</td> : <td>{'--'}</td>}</div>
+
+            ),
+
+
+        },
 
         {
-            field: 'requester.name', headerName: 'CREATED BY', flex: 1, 'filterable': false,
+            field: 'requester.name', headerName: 'CREATED BY', flex: 1.15, 'filterable': false,
             renderCell: (params) => (
-                <div>
+                <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-line', textAlign: 'justify' }}>
                     {/* {contacts.get(params.value)} */}
                     {params.row.requester.name != null ? <td>{params.row.requester.name}</td> : <td>{'DNOW Contact'}</td>}
                 </div>
@@ -310,11 +325,12 @@ const DataTable = () => {
             ),
         },
 
-        {
-            field: 'diff', headerName: 'DURATION (Days)', flex: 1,
-            'filterable': false,
+        // {
+        //     field: 'diff', headerName: 'DURATION (Days)', flex: 1,
+        //     'filterable': false,
 
-        },
+        // },
+        
 
 
 
@@ -448,12 +464,8 @@ const DataTable = () => {
             .then((data) => {
 
 
-                // Access value associated with the key
-                var item_value = sessionStorage.getItem("item_key");
-
-                // Assign value to a key
-
                 // var open = []
+                
                 const map1 = new Map();
                 var day = []
                 var tick = []
@@ -608,7 +620,7 @@ const DataTable = () => {
                     // setOpTick(optick)
                     // setAllTick(data)
 
-                    // console.log('Data', data)
+                    console.log('Data', data)
 
                     // console.log('data length', data.length) c
                     // for (let i = 0; i < data.length; i++) {
@@ -649,15 +661,15 @@ const DataTable = () => {
                         opentickets.push(data[i])
 
                         // console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
-                        if (new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }) == new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })) {
+                        // if (new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }) == new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })) {
 
-                            // console.log('opentoday', data[i]['created_at']) 
-                            todayopentickets.push(data[i])
-                            // if ((new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' })<new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' })){
-                            //     console.log('cretaed', data[i]['created_at'])
+                        // console.log('opentoday', data[i]['created_at']) 
+                        todayopentickets.push(data[i])
+                        // if ((new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' })<new Date(new Date().setDate(new Date().getDate() - 7)).toLocaleDateString('en-US', { timeZone: 'UTC' })){
+                        //     console.log('cretaed', data[i]['created_at'])
 
-                            // }
-                        }
+                        // }
+                        // }
                     }
 
 
@@ -1290,28 +1302,251 @@ const DataTable = () => {
         let path = `/noconv`;
         navigate(path);
     }
+    const NoTicket = () => {
+        let path = `/noticket`;
+        navigate(path);
+    }
 
 
+
+
+    useEffect(() => {
+
+
+        var oneyearago = new Date(new Date().setFullYear(new Date().getFullYear() - 3)).toLocaleDateString('en-CA', { timeZone: 'UTC' });
+
+        // console.log('oneyearago', oneyearago)
+        // fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%272021-01-01%27%20"', {
+        // fetch(`https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%27${oneyearago}%27%20"`, {
+        fetch('https://tmsone.freshdesk.com/api/v2/search/tickets?query="created_at:>%272020-10-15%27%20"', {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                'soNkJKPVmx1hxcr5Q9QT': 'X'
+            })
+        })
+            .then((response) => {
+                // console.log('response ', response.json());
+                return response.json();
+            })
+            .then((All) => {
+                // console.log('Allll', All, All.results.length, All.total)
+
+                // var pastoneyeartickets = []
+                // for (let i = 0; i < All.results.length; i++) {
+                //     var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //     var oneyearago = new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //     var created = new Date(All.results[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //     if (created < today && created > oneyearago) {
+                //         // console.log('dates open', created); c
+                //         pastoneyeartickets.push(All.results[i])
+                //     }
+                //     //    console.log(created,today,oneyearago);
+
+                // }
+
+                // console.log(today,oneyearago,created);
+                // console.log('pastoneyeartickets',pastoneyeartickets);
+                setYearAgo(All)
+                // console.log(All.total, 'kkkkk')
+
+
+
+            })
+            .catch((err) => {
+                console.log('err in api call Main All Tickets ', err);
+            })
+
+
+
+    }, [])
+
+    //  function getAllTickets() {
+
+    //     // if (ticketId != null) {
+    //         fetch(`https://tmsone.freshdesk.com/api/v2/tickets/${search}`, {
+    //             // fetch(`https://tmsone.freshdesk.com/api/v2/tickets/346`, {
+    //             method: 'GET',
+    //             headers: new Headers({
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+    //                 'soNkJKPVmx1hxcr5Q9QT': 'X'
+    //             })
+    //         })
+    //             .then((response) => {
+    //                 return response.json();
+
+
+    //             })
+    //             .then((result) => {
+    //                 console.log(result)
+    //             //    setSearch(result)
+
+
+    //             })
+
+    //             .catch((error) => {
+    //                 console.log('error in getAllTickets', error);
+    //             })
+
+
+    //     // }
+
+    // }
+
+    function getConversationsOnid() {
+
+        // if (ticketId != null) {
+        fetch(`https://tmsone.freshdesk.com/api/v2/tickets/${search}/conversations`, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'c29Oa0pLUFZteDFoeGNyNVE5UVQ6WA==',
+                'soNkJKPVmx1hxcr5Q9QT': 'X'
+            })
+        })
+            .then((response) => {
+                // console.log(response);
+                if (search == '' || search == null) {
+                    alert('Please Enter Ticket ID')
+                }
+
+                else if (response.status == 404) {
+                    return NoTicket();
+                }
+                else {
+                    return response.json();
+                }
+
+
+
+            })
+            .then((result) => {
+                // console.log('url length', result.length); c
+                // console.log('url data', result); c
+                // console.log(result,)
+                if (result.length > 0) {
+                    const map2 = new Map();
+                    var convArr = [];
+                    var redirectFlag = true;
+                    for (let i = 0; i < result.length; i++) {
+
+                        if (result[i].body_text.includes('https://tmsone')) {
+                            redirectFlag = false;
+                            let value = result[i].body_text.split('https://tmsone')
+                            let value1 = value[1].split(" ")
+                            let url = 'https://tmsone' + value1[0]
+                            // console.log(url, "urlllll")             //here I am getting only url
+                            // map2.set(ticketId, result[i].body_text);
+                            // map2.set(ticketId, url);
+                            // conversations.set(ticketId, url);
+                            // convArr.push({'ticketId-'+ticketId : url})
+                            // console.log('urle ', url, value);
+                            // console.log('value', value);
+                            if (url != null || url != undefined || url != '') {
+                                //convArr[ticketId] = url;
+
+                                // map2.set(ticketId, url);
+                                //setConversations(new Map(map2));
+
+                                // updateMap(ticketId, url);
+
+                                window.open(url, '_blank');
+                            }
+                            // else {
+                            //     Redirect();
+
+                            // }
+
+
+
+                            // console.log('map2 ',convArr);
+                        }
+                        // else {
+                        //     Redirect();
+
+                        // }
+
+
+                    }
+
+                    if (redirectFlag) {
+                        Redirect();
+                    }
+                }
+                else {
+                    Redirect();
+
+                }
+
+                // console.log('map2 ',map2);
+
+                // console.log("convArr   ", convArr); c
+                // return convArr;
+
+            })
+            .catch((error) => {
+                console.log('error in getConversations', error);
+            })
+    }
+
+
+
+    // console.log('conversations ', conversations);
+
+    const handleSubmit = e => {
+        // e.preventDefault();
+        getConversationsOnid()
+    };
+
+    const handleKeypress = e => {
+        //it triggers by pressing the enter key
+        // console.log('key press ', e.keyCode, e.key);
+        if (e.key === 'Enter') {
+            // setSearch(e.target.value)
+            handleSubmit();
+        }
+    };
     return (
         // <div style={{ borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)',height: 700, width: '97%',padding:'10px'}}>
         <div style={{ height: 700, padding: '10px' }} >
             {/* // <div style={{borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)', width: '97%', padding: '1rem'}}> */}
-            {/* <h1 style={{'textAlign':'right', width: '97%'}}>{tableData.length > 0 ? <div>Tickets : <b>{tableData.length}</b></div> : 'No Records Found'}</h1> */}
+
+
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 3rem' }}>
                 <img src={pic} alt="DNOW" width="100" height="40" />
-                <div>
+
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', width: '100%', height: '15px', justifyContent: 'right', alignItems: 'end', padding: '12px' }}>{yearago.total > 0 ? <div>Overall : <span>{yearago.total}</span></div> : 'No Records Found'}</div>
+                    <input
+                        style={{ display: 'flex', height: '10px', justifyContent: 'right', alignItems: 'end', padding: '8px' }}
+                        type="text"
+                        // placeholder=   '&#xF002;'
+                        placeholder='Enter Ticket ID'
+                        // style="font-family:Arial, FontAwesome"
+                        value={search}
+                        // onClick={() => getAllTickets}
+                        onChange={(e) => setSearch(e.target.value)}
+                        onKeyPress={(e) => handleKeypress(e)}
 
 
-                    {/* <button class="custButton" onClick={routeChange}> */}
+                    />
 
-                    {/* </button> */}
 
-                    {/* <Redirect to="/HighCharts" /> */}
-                    {/* <AnalyticsIcon onClick={window.Navigator}></AnalyticsIcon> */}
-                    {/* <IconButton aria-label="fingerprint" color="secondary">
+                    <div>
+
+                        <Button style={{ display: 'flex', width: '90%', justifyContent: 'left', alignItems: 'end', padding: '4px' }} onClick={(e) => handleSubmit(e)}  > <SearchIcon></SearchIcon> </Button>
+                        {/* <button class="custButton" onClick={routeChange}> */}
+
+                        {/* </button> */}
+
+                        {/* <Redirect to="/HighCharts" /> */}
+                        {/* <AnalyticsIcon onClick={window.Navigator}></AnalyticsIcon> */}
+                        {/* <IconButton aria-label="fingerprint" color="secondary">
                         <StepIcon />
                     </IconButton> */}
-                    {/* <Modal
+                        {/* <Modal
                         open={open}
                         onClose={handleClose}
                         aria-labelledby="modal-modal-title"
@@ -1322,15 +1557,28 @@ const DataTable = () => {
                         </Box>
                     </Modal> */}
 
+                    </div>
                 </div>
+
             </div>
             <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+
                 {/* <TimelineRoundedIcon fontSize='large'></TimelineRoundedIcon> */}
                 {/* <Button className='one' onClick={routeChange}>Graph</Button>
 
                 <Button  className='two' onClick={opentickets}>Open:  <div> {opencount} </div> </Button>
                 <Button  className= 'three' onClick={closedtickets}>Closed:  <div> {closedcount}  </div></Button>
                 <Button  className='two' onClick={alltickets}>All:  <div> {tableData.length} </div></Button>  */}
+                {/* <Tab
+                    // value='two'
+                    // onClick={routeChange}
+                    label={'YearAgo Tickets:' + yearago.total}
+                // label = "📈"
+
+
+
+                /> */}
+
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -1341,6 +1589,7 @@ const DataTable = () => {
                 // textColor="primary"
                 // centered
                 >
+
                     <Tab
                         value='two'
                         onClick={routeChange}
