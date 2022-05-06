@@ -691,15 +691,16 @@ const HighCharts = () => {
     return (
         <>
             {/* <div style={{ height: 140, padding: '10px' }}> */}
+            
             <div style={{padding: '10px'}}>
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    {/* <Button style={{ display: 'flex', justifyContent: 'end',fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button> */}
-                    <Button onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'felx', margin: '0rem 3rem' }}>
+                
+                <div style={{ display: 'flex', justifyContent: 'felx', margin: '1rem 3rem' }}>
                     <img src={pica} alt="DNOW" width="100" height="40" />
                 </div>
-
+                <div style={{ display: 'flex', justifyContent: 'flex-end',margin: '1rem 0rem' }}>
+                    <Button style={{ display: 'flex', justifyContent: 'end',fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
+                    
+                </div>
                 <div style={{ margin: '2rem' }}>
 
                     <Grid container spacing={2}>
