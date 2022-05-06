@@ -196,10 +196,11 @@ const DataTable = () => {
                                 // console.log(result)
                                 const map2 = new Map();
                                 var convArr = [];
+                                var redirectFlag = true;
                                 for (let i = 0; i < result.length; i++) {
 
                                     if (result[i].body_text.includes('https://tmsone')) {
-
+                                        redirectFlag = false;
                                         let value = result[i].body_text.split('https://tmsone')
                                         let value1 = value[1].split(" ")
                                         let url = 'https://tmsone' + value1[0]
@@ -208,6 +209,8 @@ const DataTable = () => {
                                         // map2.set(ticketId, url);
                                         // conversations.set(ticketId, url);
                                         // convArr.push({'ticketId-'+ticketId : url})
+                                        // console.log('urle ', url, value);
+                                        // console.log('value', value);
                                         if (url != null || url != undefined || url != '') {
                                             //convArr[ticketId] = url;
 
@@ -215,16 +218,28 @@ const DataTable = () => {
                                             //setConversations(new Map(map2));
 
                                             // updateMap(ticketId, url);
-                                            // console.log('urle ', url);
+
                                             window.open(url, '_blank');
                                         }
-                                        else {
-                                            Redirect();
+                                        // else {
+                                        //     Redirect();
 
-                                        }
+                                        // }
+
+
 
                                         // console.log('map2 ',convArr);
                                     }
+                                    // else {
+                                    //     Redirect();
+
+                                    // }
+
+
+                                }
+
+                                if (redirectFlag) {
+                                    Redirect();
                                 }
 
                                 // console.log('map2 ',map2);
@@ -239,7 +254,7 @@ const DataTable = () => {
                     }
                 };
 
-                return <Button style={{ justifyContent: 'left',padding:'1px' }} onClick={onClick}>{params.value}</Button>;
+                return <Button style={{ justifyContent: 'left', padding: '1px' }} onClick={onClick}>{params.value}</Button>;
             },
         },
         {
@@ -330,7 +345,7 @@ const DataTable = () => {
         //     'filterable': false,
 
         // },
-        
+
 
 
 
@@ -465,7 +480,7 @@ const DataTable = () => {
 
 
                 // var open = []
-                
+
                 const map1 = new Map();
                 var day = []
                 var tick = []
