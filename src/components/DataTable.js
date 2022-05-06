@@ -193,59 +193,38 @@ const DataTable = () => {
                             .then((result) => {
                                 // console.log('url length', result.length); c
                                 // console.log('url data', result); c
-                                // console.log(result, 'rrrrrrrrrr')
-                                if (result.length > 0) {
-                                    const map2 = new Map();
-                                    var convArr = [];
-                                    var redirectFlag = true;
-                                    for (let i = 0; i < result.length; i++) {
+                                // console.log(result)
+                                const map2 = new Map();
+                                var convArr = [];
+                                for (let i = 0; i < result.length; i++) {
 
-                                        if (result[i].body_text.includes('https://tmsone')) {
-                                            redirectFlag = false;
-                                            let value = result[i].body_text.split('https://tmsone')
-                                            let value1 = value[1].split(" ")
-                                            let url = 'https://tmsone' + value1[0]
-                                            // console.log(url, "urlllll")             //here I am getting only url
-                                            // map2.set(ticketId, result[i].body_text);
+                                    if (result[i].body_text.includes('https://tmsone')) {
+
+                                        let value = result[i].body_text.split('https://tmsone')
+                                        let value1 = value[1].split(" ")
+                                        let url = 'https://tmsone' + value1[0]
+                                        // console.log(url, "urlllll")             //here I am getting only url
+                                        // map2.set(ticketId, result[i].body_text);
+                                        // map2.set(ticketId, url);
+                                        // conversations.set(ticketId, url);
+                                        // convArr.push({'ticketId-'+ticketId : url})
+                                        if (url != null || url != undefined || url != '') {
+                                            //convArr[ticketId] = url;
+
                                             // map2.set(ticketId, url);
-                                            // conversations.set(ticketId, url);
-                                            // convArr.push({'ticketId-'+ticketId : url})
-                                            // console.log('urle ', url, value, value1);
-                                            // console.log('value', value);
-                                            if (url != null || url != undefined || url != '') {
-                                                //convArr[ticketId] = url;
+                                            //setConversations(new Map(map2));
 
-                                                // map2.set(ticketId, url);
-                                                //setConversations(new Map(map2));
-
-                                                // updateMap(ticketId, url);
-
-                                                window.open(url, '_blank');
-                                            }
-                                            // else {
-                                            //     Redirect();
-
-                                            // }
-
-
-
-                                            // console.log('map2 ',convArr);
+                                            // updateMap(ticketId, url);
+                                            // console.log('urle ', url);
+                                            window.open(url, '_blank');
                                         }
-                                        // else {
-                                        //     Redirect();
+                                        else {
+                                            Redirect();
 
-                                        // }
+                                        }
 
-
+                                        // console.log('map2 ',convArr);
                                     }
-
-                                    if (redirectFlag) {
-                                        Redirect();
-                                    }
-                                }
-                                else {
-                                    Redirect();
-
                                 }
 
                                 // console.log('map2 ',map2);
@@ -260,7 +239,7 @@ const DataTable = () => {
                     }
                 };
 
-                return <Button style={{ justifyContent: 'left', padding: '1px' }} onClick={onClick}>{params.value}</Button>;
+                return <Button style={{ justifyContent: 'left',padding:'1px' }} onClick={onClick}>{params.value}</Button>;
             },
         },
         {
@@ -351,7 +330,7 @@ const DataTable = () => {
         //     'filterable': false,
 
         // },
-
+        
 
 
 
@@ -486,7 +465,7 @@ const DataTable = () => {
 
 
                 // var open = []
-                var contacts = []
+                
                 const map1 = new Map();
                 var day = []
                 var tick = []
@@ -568,12 +547,6 @@ const DataTable = () => {
                     if (data[i]['priority'] === 4) {
                         data[i]['priority'] = 'Urgrnt';
                     }
-
-                    if (data[i]['requester']['email'].includes('@dnow.com')) {
-
-                        contacts.push(data[i])
-                    }
-                    // console.log('val', contacts)
                     // }
                     // for (let i = 0; i < data.length; i++) {
                     //     console.log('created date', data[i]['created_at']);
@@ -647,7 +620,7 @@ const DataTable = () => {
                     // setOpTick(optick)
                     // setAllTick(data)
 
-                    // console.log('Data', data)
+                    console.log('Data', data)
 
                     // console.log('data length', data.length) c
                     // for (let i = 0; i < data.length; i++) {
@@ -666,7 +639,6 @@ const DataTable = () => {
 
 
                     data[i]['diff'] = DayDiff(data[i]['created_at'], data[i]['stats']['resolved_at'])
-                    // data[i]['name'] = company()
 
                     tick.push(data[i].id)
                     day.push(DayDiff(data[i]['created_at'], data[i]['stats']['resolved_at']))
@@ -858,7 +830,6 @@ const DataTable = () => {
 
 
                 setTableDataa(data)
-                setData(contacts)
 
 
 
@@ -1079,16 +1050,6 @@ const DataTable = () => {
         // console.log('diff', d) c
         return d
     }
-    // function company() {
-    //     for (let i = 0; i < data.length; i++) {
-    //         var names = []
-    //         if (data[i]['requester']['email'].includes('@dnow.com')) {
-
-    //             names.push(data[i])
-    //         }
-    //     }
-    //     console.log('val', names)
-    // }
     function closedtickets() {
 
         // console.log('closedTickets'); c
@@ -1556,7 +1517,7 @@ const DataTable = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', margin: '1rem 3rem' }}>
                 <img src={pic} alt="DNOW" width="100" height="40" />
 
-                <div style={{ display: 'flex',justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ display: 'flex', width: '100%', height: '15px', justifyContent: 'right', alignItems: 'end', padding: '12px' }}>{yearago.total > 0 ? <div>Overall : <span>{yearago.total}</span></div> : 'No Records Found'}</div>
                     <input
                         style={{ display: 'flex', height: '10px', justifyContent: 'right', alignItems: 'end', padding: '8px' }}
