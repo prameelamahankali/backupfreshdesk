@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 // import { fontSize } from '@mui/system';
 
 import { useLocation } from 'react-router-dom';
-import { height } from '@mui/system';
+import { color, height } from '@mui/system';
 
 
 
@@ -65,8 +65,11 @@ const HighCharts = () => {
     const options = {
         chart: {
             type: 'spline',
-            height: '360',
-            width: '500'
+            height: '385',
+            width: '480',
+            plotBorderColor: '#CCCCCC',
+            plotBorderWidth: 1,
+            // plotShadow: true,
         },
         title: {
             text: 'Duration to close a ticket'
@@ -93,8 +96,17 @@ const HighCharts = () => {
     const highprio = {
         chart: {
             type: 'spline',
-            height: '360',
-            width: '500'
+            height: '373',
+            width: '480',
+            // color: '#FF0000',
+            // plotBorderColor: '#CCCCCC',
+            borderColor: '#4572A7',
+            plotBorderWidth: 1,
+            plotBorderColor: '#CCCCCC',
+            // backgroundColor: '#222',
+            // plotShadow: true,
+            // type: 'spline'
+            
         },
         title: {
             text: 'High Priority Tickets (Per Week)'
@@ -114,7 +126,10 @@ const HighCharts = () => {
         series: [
             {
                 data: location.state.high,
-                name: 'High and Urgent'
+                name: 'High and Urgent',
+                color: '#FF0000'
+                // color: '#FFA500'
+                // color: '#FF8C00'
             },
         ]
     };
@@ -693,14 +708,25 @@ const HighCharts = () => {
             {/* <div style={{ height: 140, padding: '10px' }}> */}
             
             <div style={{padding: '10px'}}>
-                
+{/* 
                 <div style={{ display: 'flex', justifyContent: 'felx', margin: '1rem 3rem' }}>
                     <img src={pica} alt="DNOW" width="100" height="40" />
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end',margin: '1rem 0rem' }}>
-                    <Button style={{ display: 'flex', justifyContent: 'end',fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end',margin: '1rem 0rem' }}>
+                    <Button style={{ display: 'flex', justifyContent: 'flex-end',fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
+                    
+                    </div>
+                    
+                </div> */}
+                <div style={{width: '100' ,margin: '1rem 3rem' }}>
+                    <img style={{float: 'left'}} src={pica} alt="DNOW" width="100" height="40" />
+                    <div style={{ float: 'right',margin: '1px auto',width: "100" }}>
+                    <Button style={{ width: '100',fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
+                    
+                    </div>
                     
                 </div>
+                
+                
                 <div style={{ margin: '2rem' }}>
 
                     <Grid container spacing={2}>
