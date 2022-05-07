@@ -635,7 +635,7 @@ const DataTable = () => {
                     // setOpTick(optick)
                     // setAllTick(data)
 
-                    console.log('Data', data)
+                    // console.log('Data', data)
 
                     // console.log('data length', data.length) c
                     // for (let i = 0; i < data.length; i++) {
