@@ -777,7 +777,7 @@ const DataTable = () => {
                     //     // console.log('high priority', data[i].status); c
                     //     openticketslastweek.push(data[i])
                     // }
-                    if (data[i].priority == 1 || data[i].priority == 4) {
+                    if (data[i].priority == 3 || data[i].priority == 4) {
                         // console.log('status', data[i].priority); c
                         high.push(data[i])
                         // console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
