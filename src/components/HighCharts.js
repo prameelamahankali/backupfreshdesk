@@ -65,7 +65,7 @@ const HighCharts = () => {
     const options = {
         chart: {
             type: 'spline',
-            height: '385',
+            height: '389',
             plotBorderColor: '#CCCCCC',
             plotBorderWidth: 1,
             // plotShadow: true,
@@ -95,7 +95,7 @@ const HighCharts = () => {
     const highprio = {
         chart: {
             type: 'spline',
-            height: '385',
+            height: '378',
             // color: '#FF0000',
             // plotBorderColor: '#CCCCCC',
             borderColor: '#4572A7',
