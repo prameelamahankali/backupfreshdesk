@@ -777,24 +777,26 @@ const DataTable = () => {
                     //     // console.log('high priority', data[i].status); c
                     //     openticketslastweek.push(data[i])
                     // }
-                    if (data[i].priority == 3 || data[i].priority == 4) {
-                        // console.log('status', data[i].priority); c
-                        high.push(data[i])
-                        // console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
-                        var created = new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
-                        var eightweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 56)).toLocaleDateString('en-US', { timeZone: 'UTC' });
-                        var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
-                        // console.log('eight week ago')
-                        // console.log('datesss ', created, eightweekAgoDate, today);
-                        if (created < today && created > eightweekAgoDate) {
-                            // console.log('----high created', created); c
-                            highprioritylastweek.push(data[i])
-                        }
+                    
+                //     if (data[i]['priority'] == 3 || data[i]['priority'] == 4) {
+                //         console.log('status', data[i].priority); 
+                //         console.log('rrrrrrrrrrrrrrrrrr');
+                //         high.push(data[i])
+                //         console.log('cretaed', data[i]['created_at'], new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' }), new Date().toLocaleDateString('en-US', { timeZone: 'UTC' }))
+                //         var created = new Date(data[i]['created_at']).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //         var eightweekAgoDate = new Date(new Date().setDate(new Date().getDate() - 56)).toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //         var today = new Date().toLocaleDateString('en-US', { timeZone: 'UTC' });
+                //         console.log('eight week ago')
+                //         console.log('datesss ', created, eightweekAgoDate, today);
+                //         if (created < today && created > eightweekAgoDate) {
+                //             console.log('----high created', created); 
+                //             highprioritylastweek.push(data[i])
+                //         }
+                //         // highprioritylastweek.push(data[i])
+                //     }
 
-                    }
 
-
-                    // console.log('highprioritylastweek', highprioritylastweek,    highprioritylastweek.length) 
+                //     console.log('highprioritylastweek', highprioritylastweek,    highprioritylastweek.length) 
                 }
 
                 // var date1 = new Date(data[i]['created_at']).getTime() / 1000;
@@ -1209,10 +1211,10 @@ const DataTable = () => {
 
 
                     if (data.results[i].priority == 3 || data.results[i].priority == 4) {
-                        // console.log('status', data.results[i].priority);
+                        console.log('status', data.results[i].priority);
                         highArr.push(data.results[i])
                         if (created >= eightweekAgoDate && created <= sevenweekAgoDate) {
-                            // console.log('----high created', data.results[i]);
+                            console.log('----high created', data.results[i]);
                             eightweek.push(data.results[i])
 
                             // perweek.push(eightweek.length)
@@ -1525,7 +1527,7 @@ const DataTable = () => {
     };
     return (
         // <div style={{ borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)',height: 700, width: '97%',padding:'10px'}}>
-        <div style={{ height: 700, padding: '10px' }} >
+        <div style={{ height: 700, padding: '10px' }} > 
             {/* // <div style={{borderRadius: '0.5rem', margin: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.3)', width: '97%', padding: '1rem'}}> */}
 
 

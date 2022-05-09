@@ -66,7 +66,6 @@ const HighCharts = () => {
         chart: {
             type: 'spline',
             height: '385',
-            width: '480',
             plotBorderColor: '#CCCCCC',
             plotBorderWidth: 1,
             // plotShadow: true,
@@ -85,7 +84,7 @@ const HighCharts = () => {
             {
                 data: location.state.days,
                 name: 'Days',
-                
+
             },
 
         ]
@@ -96,8 +95,7 @@ const HighCharts = () => {
     const highprio = {
         chart: {
             type: 'spline',
-            height: '373',
-            width: '480',
+            height: '385',
             // color: '#FF0000',
             // plotBorderColor: '#CCCCCC',
             borderColor: '#4572A7',
@@ -106,14 +104,14 @@ const HighCharts = () => {
             // backgroundColor: '#222',
             // plotShadow: true,
             // type: 'spline'
-            
+
         },
         title: {
             text: 'High Priority Tickets (Per Week)'
         },
         xAxis: {
             categories: [1, 2, 3, 4, 5, 6, 7, 8],
-            // categories:high.length
+            // categories:location.high.length
             // name: 'Tickets',
             // type: "category",
             // labels: {
@@ -706,9 +704,9 @@ const HighCharts = () => {
     return (
         <>
             {/* <div style={{ height: 140, padding: '10px' }}> */}
-            
-            <div style={{padding: '10px'}}>
-{/* 
+
+            <div style={{ padding: '10px' }}>
+                {/* 
                 <div style={{ display: 'flex', justifyContent: 'felx', margin: '1rem 3rem' }}>
                     <img src={pica} alt="DNOW" width="100" height="40" />
                     <div style={{ display: 'flex', justifyContent: 'flex-end',margin: '1rem 0rem' }}>
@@ -717,25 +715,27 @@ const HighCharts = () => {
                     </div>
                     
                 </div> */}
-                <div style={{width: '100' ,margin: '1rem 3rem' }}>
-                    <img style={{float: 'left'}} src={pica} alt="DNOW" width="100" height="40" />
-                    <div style={{ float: 'right',margin: '1px auto',width: "100" }}>
-                    <Button style={{ width: '100',fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
-                    
+                <div style={{ width: '100', margin: '1rem 3rem' }}>
+                    <img style={{ float: 'left' }} src={pica} alt="DNOW" width="100" height="40" />
+                    <div style={{ float: 'right', margin: '1px auto', width: "100" }}>
+                        <Button style={{ width: '100', fontSize: 'xx-large' }} onClick={routeChange}>{<img src={pic} alt="BACK" width="20" height="20" />}</Button>
+
                     </div>
-                    
+
                 </div>
-                
-                
+
+
                 <div style={{ margin: '2rem' }}>
 
                     <Grid container spacing={2}>
-                        <Grid xs={12} md={12}>
-                            <div style={{ display: 'flex', padding: '10px', width: '1200px', height: 370, justifyContent: 'space-evenly' }}>
+                        <Grid xs={12} sm={12} md={12} lg={12} xl={12}>
+                            <div style={{ display: 'flex', padding: '10px', height: '370', justifyContent: 'space-evenly' }}>
                                 {/* <span style={{border: '1px solid gray'}}><HighchartsReact highcharts={Highcharts} options={options} /></span>
                                 <span style={{border: '1px solid gray'}}><HighchartsReact highcharts={Highcharts} options={highprio} /></span> */}
-                                <HighchartsReact highcharts={Highcharts} options={options} />
-                                <HighchartsReact highcharts={Highcharts} options={highprio} />
+                                <div style={{ width: '40%' }}><HighchartsReact highcharts={Highcharts} options={options} /></div>
+                                <div style={{ width: '40%' }}><HighchartsReact highcharts={Highcharts} options={highprio} /></div>
+
+
                             </div>
                         </Grid>
                         <Grid item xs={6} md={3}>
